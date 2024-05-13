@@ -14,7 +14,7 @@ OBJ = $(SRC:.cpp=.o)
 CC = g++
 
 CXXFLAGS	+=	-Wall -Wextra -Werror -Wpedantic
-CXXFLAGS 	+=	-I./include
+CXXFLAGS 	+=	-I./include -I./src/Pizzas
 
 all:	$(NAME)
 

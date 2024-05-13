@@ -1,24 +1,25 @@
 ##
 ## EPITECH PROJECT, 2024
-## PROJECT_NAME
+## Plazza
 ## File description:
 ## Makefile
 ##
 
-NAME = EXECUTABLE_NAME
+NAME = plazza
 
-SRC = ./src/main.c
+SRC = ./src/main.cpp
 
-OBJ = $(SRC:.c=.o)
+OBJ = $(SRC:.cpp=.o)
 
-CC = gcc
+CC = g++
 
-CFLAGS = -Wall -Wextra -Werror -Wpedantic
+CXXFLAGS	+=	-Wall -Wextra -Werror -Wpedantic
+CXXFLAGS 	+=	-I./include
 
-all: $(NAME)
+all:	$(NAME)
 
-$(NAME): $(OBJ)
-	$(CC) -o $(NAME) $(OBJ) $(CFLAGS)
+$(NAME):	$(OBJ)
+	$(CC) -o $(NAME) $(OBJ) $(CXXFLAGS)
 
 clean:
 	rm -f $(OBJ)

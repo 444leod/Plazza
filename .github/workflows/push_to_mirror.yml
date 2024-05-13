@@ -1,9 +1,9 @@
-name: PROJECT_NAME
+name: Plazza
 
 on: [push, pull_request]
 
 env:
-  MIRROR_URL: ""
+  MIRROR_URL: "git@github.com:EpitechPromo2027/B-CCP-400-LIL-4-1-theplazza-thibault.longuepee.git"
 
 jobs:
   build:

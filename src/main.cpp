@@ -29,8 +29,7 @@ int main(
     if (nbCooks <= 0)
         return 84;
 
-    std::cout << "Multiplier: " << multiplier << std::endl;
-    std::cout << "Number of cooks: " << nbCooks << std::endl;
-    std::cout << "Restock time: " << restockTime << std::endl;
+    (void) multiplier;
+    (void) restockTime;
     return 0;
 }

@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** Pizzas
 ** File description:
-** Regina
+** Americana
 */
 
 #include "APizza.hpp"
@@ -10,24 +10,24 @@
 #pragma once
 
 namespace plz {
-    class Regina : public APizza{
+    class Americana : public APizza{
         public:
-            Regina(plz::PizzaSize size) :
+            Americana(plz::PizzaSize size) :
                 _size(size),
-                _type(plz::PizzaType::Regina),
+                _type(plz::PizzaType::Americana),
                 _ingredients({
                     .dough = 1,
                     .tomato = 1,
                     .gruyere = 1,
-                    .ham = 1,
-                    .mushrooms = 1,
-                    .steak = 0,
+                    .ham = 0,
+                    .mushrooms = 0,
+                    .steak = 1,
                     .eggplant = 0,
                     .goatCheese = 0,
                     .chiefLove = 0
                 }),
                 _bakingTime(2) {};
-            ~Regina();
+            ~Americana();
 
         private:
             const plz::PizzaSize _size;

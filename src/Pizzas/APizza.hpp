@@ -13,8 +13,11 @@
 namespace plz {
     class APizza: public IPizza {
         public:
-            APizza(plz::PizzaSize size, double UNUSED multiplier): _size(size), _type(), _ingredients(), _bakingTime() {};
-            APizza(): _size(), _type(), _ingredients(), _bakingTime() {};
+            APizza(plz::PizzaSize size, plz::PizzaType type, plz::Ingredrients ingredients, std::uint32_t bakingTime) :
+                _size(size),
+                _type(type),
+                _ingredients(ingredients),
+                _bakingTime(bakingTime) {};
             ~APizza() = default;
             virtual plz::PizzaSize getSize() const { return _size; };
             virtual plz::PizzaType getType() const { return _type; };

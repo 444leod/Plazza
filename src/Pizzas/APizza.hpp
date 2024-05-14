@@ -12,10 +12,14 @@
 namespace plz {
     class APizza: public IPizza {
         public:
-            APizza();
-            ~APizza();
+            APizza() = default;
+            ~APizza() = default;
+            virtual plz::PizzaSize getSize() = 0;
+            virtual plz::PizzaType getType() = 0;
 
         protected:
-        private:
+            plz::PizzaSize _size;
+            plz::PizzaType _type;
+            
     };
 }

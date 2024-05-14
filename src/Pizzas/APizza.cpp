@@ -7,10 +7,3 @@
 
 #include "APizza.hpp"
 
-plz::APizza::APizza()
-{
-}
-
-plz::APizza::~APizza()
-{
-}

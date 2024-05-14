@@ -27,8 +27,9 @@ namespace plz {
     
     class IPizza {
         public:
-            IPizza();
-            ~IPizza();
+            virtual ~IPizza() = 0;
+            virtual plz::PizzaSize getSize() = 0;
+            virtual plz::PizzaType getType() = 0;
 
         protected:
         private:

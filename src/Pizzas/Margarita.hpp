@@ -25,12 +25,14 @@ namespace plz {
                     .eggplant = 0,
                     .goatCheese = 0,
                     .chiefLove = 0
-                }) {};
+                }),
+                _bakingTime(1) {};
             ~Margarita();
 
         private:
             const plz::PizzaSize _size;
             const plz::PizzaType _type;
             const plz::Ingredrients _ingredients;
+            const std::uint32_t _bakingTime;
     };
 }

@@ -10,16 +10,14 @@
 #pragma once
 
 namespace plz {
-    enum PizzaType
-    {
+    enum PizzaType {
         Regina = 1,
         Margarita = 2,
         Americana = 4,
         Fantasia = 8
     };
 
-    enum PizzaSize
-    {
+    enum PizzaSize {
         S = 1,
         M = 2,
         L = 4,

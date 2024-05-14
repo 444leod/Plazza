@@ -12,7 +12,7 @@
 namespace plz {
     class Regina : public APizza{
         public:
-            Regina(plz::PizzaSize size) :
+            Regina(plz::PizzaSize size, double multiplier) :
                 _size(size),
                 _type(plz::PizzaType::Regina),
                 _ingredients({
@@ -26,7 +26,7 @@ namespace plz {
                     .goatCheese = 0,
                     .chiefLove = 0
                 }),
-                _bakingTime(2) {};
+                _bakingTime(2 * multiplier) {};
             ~Regina();
 
         private:

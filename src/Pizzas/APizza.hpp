@@ -12,7 +12,8 @@
 namespace plz {
     class APizza: public IPizza {
         public:
-            APizza() = default;
+            APizza(plz::PizzaSize size): _size(size), _type(), _ingredients() {};
+            APizza(): _size(), _type(), _ingredients() {};
             ~APizza() = default;
             virtual plz::PizzaSize getSize() const { return _size; };
             virtual plz::PizzaType getType() const { return _type; };

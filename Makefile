@@ -8,13 +8,13 @@
 NAME = plazza
 
 SRC =	./src/main.cpp \
-		./src/Pizzas/APizza.cpp
+		./src/Pizzas/Margarita.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
 CC = g++
 
-CXXFLAGS	+=	-Wall -Wextra -Werror -Wpedantic
+CXXFLAGS	+=	-Wall -Wextra -Werror -Wpedantic -std=c++20
 CXXFLAGS 	+=	-I./include -I./src/Pizzas
 
 all:	$(NAME)

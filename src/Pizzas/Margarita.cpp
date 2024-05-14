@@ -2,8 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** Pizzas
 ** File description:
-** APizza
+** Margarita
 */
 
-#include "APizza.hpp"
-
+#include "Margarita.hpp"

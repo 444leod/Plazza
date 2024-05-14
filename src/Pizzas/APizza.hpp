@@ -14,12 +14,13 @@ namespace plz {
         public:
             APizza() = default;
             ~APizza() = default;
-            virtual plz::PizzaSize getSize() { return _size; };
-            virtual plz::PizzaType getType() { return _type; };
+            virtual plz::PizzaSize getSize() const { return _size; };
+            virtual plz::PizzaType getType() const { return _type; };
+            virtual const plz::Ingredrients getIngredients() const { return _ingredients; };
 
         protected:
-            plz::PizzaSize _size;
-            plz::PizzaType _type;
-
+            const plz::PizzaSize _size;
+            const plz::PizzaType _type;
+            const plz::Ingredrients _ingredients;
     };
 }

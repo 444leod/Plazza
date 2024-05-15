@@ -7,14 +7,15 @@
 
 NAME = plazza
 
-SRC = ./src/main.cpp
+SRC =	src/main.cpp \
+		src/IPC/NamedPipes.cpp
 
 OBJ = $(SRC:.cpp=.o)
 
 CC = g++
 
-CXXFLAGS	+=	-Wall -Wextra -Werror -Wpedantic
-CXXFLAGS 	+=	-I./include
+CXXFLAGS	+=	-Wall -Wextra -Werror -Wpedantic -g
+CXXFLAGS 	+=	-I./include -I./src/IPC
 
 all:	$(NAME)
 

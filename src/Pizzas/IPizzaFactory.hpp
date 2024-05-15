@@ -13,7 +13,9 @@
 
 #include <memory>
 #include <map>
+#include <vector>
 #include <functional>
+#include <sstream>
 
 #pragma once
 
@@ -22,7 +24,22 @@ namespace plz {
         public:
             IPizzaFactory() {};
             ~IPizzaFactory() = default;
-            // void tryCreateIPrimitive(std::string key, PizzaType& type, std::vector<std::shared_ptr<IPrimitive>>& primitives);
+            void tryCreateIPizzas(std::string command, std::vector<std::shared_ptr<IPizza>>& pizzas);
+
+            class IPizzaFactoryException : public std::exception {
+                public:
+                    IPizzaFactoryException(const std::string &message)
+                    {
+                        std::stringstream ss;
+                        ss << "IPizzaFactoryException: " << message;
+                        _message = ss.str();
+                    }
+                    const char *what() const noexcept override {
+                        return _message.c_str();
+                    }
+                private:
+                    std::string _message;
+            };
 
         private:
             std::map<std::string, PizzaType> _pizzaTypeMap = {

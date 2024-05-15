@@ -15,5 +15,7 @@ int main(
 )
 {
     plz::IPizzaFactory factory;
+    std::vector<std::shared_ptr<plz::IPizza>> pizzas;
+    factory.tryCreateIPizzas("margarita XL x2;margarita XL x2;margarita XL x2;margarita XL x2;", pizzas);
     return 0;
 }

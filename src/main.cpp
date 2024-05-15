@@ -5,15 +5,14 @@
 ** main
 */
 
-#include "macros.hpp"
-
+#include "IPizzaFactory.hpp"
 
 int main(
-    UNUSED int argc,
-    UNUSED char *argv[],
-    UNUSED char *env[]
+    [[maybe_unused]] int argc,
+    [[maybe_unused]] char *argv[],
+    [[maybe_unused]] char *env[]
 )
 {
-
+    plz::IPizzaFactory factory;
     return 0;
 }

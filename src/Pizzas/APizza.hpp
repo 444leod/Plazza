@@ -6,14 +6,13 @@
 */
 
 #include "IPizza.hpp"
-#include "macros.hpp"
 
 #pragma once
 
 namespace plz {
     class APizza: public IPizza {
         public:
-            APizza(plz::PizzaSize size, double UNUSED multiplier): _size(size), _type(), _ingredients(), _bakingTime() {};
+            APizza(plz::PizzaSize size): _size(size), _type(), _ingredients(), _bakingTime() {};
             APizza(): _size(), _type(), _ingredients(), _bakingTime() {};
             ~APizza() = default;
             virtual plz::PizzaSize getSize() const { return _size; };

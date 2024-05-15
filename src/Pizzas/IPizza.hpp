@@ -39,7 +39,7 @@ namespace plz {
 
     class IPizza {
         public:
-            virtual ~IPizza() = 0;
+            virtual ~IPizza() = default;
             virtual plz::PizzaSize getSize() const = 0;
             virtual plz::PizzaType getType() const = 0;
             virtual const plz::Ingredrients getIngredients() const = 0;

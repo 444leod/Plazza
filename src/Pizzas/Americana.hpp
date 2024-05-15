@@ -14,9 +14,7 @@ namespace plz {
         class Americana : public APizza{
             public:
                 Americana(plz::PizzaSize size, double multiplier) :
-                    _size(size),
-                    _type(plz::PizzaType::Americana),
-                    _ingredients({
+                    APizza(size, plz::PizzaType::Americana, {
                         .dough = 1,
                         .tomato = 1,
                         .gruyere = 1,
@@ -26,15 +24,7 @@ namespace plz {
                         .eggplant = 0,
                         .goatCheese = 0,
                         .chiefLove = 0
-                    }),
-                    _bakingTime(2 * multiplier) {};
-                ~Americana();
-
-            private:
-                const plz::PizzaSize _size;
-                const plz::PizzaType _type;
-                const plz::Ingredrients _ingredients;
-                const std::uint32_t _bakingTime;
+                    }, 2 * multiplier) {};
         };
     }
 }

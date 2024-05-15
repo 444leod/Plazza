@@ -6,11 +6,12 @@
 */
 
 #include "IPizzaFactory.hpp"
+#include "macros.hpp"
 
 int main(
-    [[maybe_unused]] int argc,
-    [[maybe_unused]] char *argv[],
-    [[maybe_unused]] char *env[]
+    UNUSED int argc,
+    UNUSED char *argv[],
+    UNUSED char *env[]
 )
 {
     plz::IPizzaFactory factory;

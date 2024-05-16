@@ -28,12 +28,7 @@ namespace plz {
 
             class IPizzaFactoryException : public std::exception {
                 public:
-                    IPizzaFactoryException(const std::string &message)
-                    {
-                        std::stringstream ss;
-                        ss << "IPizzaFactoryException: " << message;
-                        _message = ss.str();
-                    }
+                    IPizzaFactoryException(const std::string &message) : _message(message) {}
                     const char *what() const noexcept override {
                         return _message.c_str();
                     }

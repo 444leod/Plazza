@@ -7,6 +7,7 @@
 
 #include "IPizzaFactory.hpp"
 #include "macros.hpp"
+#include <iostream>
 
 int main(
     UNUSED int argc,
@@ -16,6 +17,12 @@ int main(
 {
     plz::IPizzaFactory factory;
     std::vector<std::shared_ptr<plz::IPizza>> pizzas;
-    factory.tryCreateIPizzas("margarita XL x2;margarita XL x2;margarita XL x2;margarita XL x2;", pizzas);
+    try {
+        std::string command;
+        std::getline(std::cin, command);
+        factory.tryCreateIPizzas(command, pizzas);
+    } catch (const plz::IPizzaFactory::IPizzaFactoryException &e) {
+        std::cerr << e.what() << std::endl;
+    }
     return 0;
 }

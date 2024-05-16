@@ -2,7 +2,7 @@
 ** EPITECH PROJECT, 2024
 ** Plazza
 ** File description:
-** Cooker
+** Pizzaiolo
 */
 
 #pragma once
@@ -13,10 +13,10 @@
 #include <memory>
 
 namespace plz {
-    class Cooker {
+    class Pizzaiolo {
         public:
-            Cooker();
-            ~Cooker();
+            Pizzaiolo();
+            ~Pizzaiolo();
 
             void start();
             void stop();

@@ -10,7 +10,7 @@
 
 // Global
 
-plz::Kitchen::Kitchen(uint32_t pizzaiolos, uint32_t restock) : _pizzaiolos(pizzaiolos), _restock(restock)
+plz::Kitchen::Kitchen(uint32_t pizzaiolos, uint32_t restock) : _pizzaiolosNumber(pizzaiolos), _restock(restock)
 {
 }
 

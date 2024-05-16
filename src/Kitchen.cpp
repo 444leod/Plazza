@@ -10,7 +10,7 @@
 
 // Global
 
-plz::Kitchen::Kitchen(uint32_t cooks, uint32_t restock) : _cooks(cooks), _restock(restock)
+plz::Kitchen::Kitchen(uint32_t pizzaiolos, uint32_t restock) : _pizzaiolos(pizzaiolos), _restock(restock)
 {
 }
 
@@ -25,8 +25,9 @@ void plz::Kitchen::initPipe(UNUSED SIDE side)
 
 // Reception side
 
-void plz::Kitchen::displayIngredients()
+plz::Ingredrients plz::Kitchen::getIngredients()
 {
+    return plz::Ingredrients();
 }
 
 void plz::Kitchen::queuePizza(UNUSED std::shared_ptr<plz::IPizza> pizza)
@@ -45,6 +46,16 @@ bool plz::Kitchen::isBusy()
 
 void plz::Kitchen::close()
 {
+}
+
+uint32_t plz::Kitchen::nbOfAvailablePizzaiolos()
+{
+    return 0;
+}
+
+uint32_t plz::Kitchen::nbOfAvailableStorage()
+{
+    return 0;
 }
 
 std::pair<std::chrono::seconds, std::chrono::milliseconds> plz::Kitchen::idleTime()
@@ -67,7 +78,7 @@ void plz::Kitchen::_restockIngredients()
 {
 }
 
-void plz::Kitchen::_cookPizzas()
+void plz::Kitchen::_pizzaioloPizzas()
 {
 }
 

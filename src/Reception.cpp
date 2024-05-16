@@ -6,9 +6,10 @@
 */
 
 #include "Reception.hpp"
+#include "IPizzaFactory.hpp"
 #include "macros.hpp"
 
-plz::Reception::Reception()
+plz::Reception::Reception(plz::Setup setup, plz::IPizzaFactory factory) : _pizzaiolos(setup.pizzaiolos()), _restock(setup.restock()), _factory(factory)
 {
 }
 

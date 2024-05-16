@@ -28,8 +28,9 @@ int main(
     }
     if (nbCooks <= 0)
         return 84;
+    if (multiplier < 0)
+        return 84;
 
-    (void) multiplier;
     (void) restockTime;
     return 0;
 }

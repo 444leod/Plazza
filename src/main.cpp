@@ -15,7 +15,7 @@ int main(
     UNUSED char *env[]
 )
 {
-    plz::IPizzaFactory factory;
+    plz::IPizzaFactory factory = plz::IPizzaFactory(5);
     std::vector<std::shared_ptr<plz::IPizza>> pizzas;
     try {
         std::string command;

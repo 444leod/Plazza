@@ -9,10 +9,11 @@
 #include "macros.hpp"
 #include <iostream>
 
-void plz::IPizzaFactory::tryCreateIPizzas(std::string command, UNUSED std::vector<std::shared_ptr<IPizza>>& pizzas)
+void plz::IPizzaFactory::tryCreateIPizzas(std::string command, std::vector<std::shared_ptr<IPizza>>& pizzas)
 {
     std::string parsed;
     std::stringstream input_stringstream(command);
+    std::vector<std::shared_ptr<IPizza>> tmpPizzas;
 
     while (std::getline(input_stringstream, parsed, ';'))
     {
@@ -35,5 +36,8 @@ void plz::IPizzaFactory::tryCreateIPizzas(std::string command, UNUSED std::vecto
         }
         if (nbPizzasInt <= 0 || nbPizzasInt > 99)
             throw IPizzaFactoryException("Invalid number of pizzas, must be between 1 and 99!");
+        for (int i = 0; i < nbPizzasInt; i++)
+            tmpPizzas.push_back(_pizzaFactory[_pizzaTypeMap[pizzaType]](_pizzaSizeMap[pizzaSize], _multiplier));
     }
+    pizzas = tmpPizzas;
 }

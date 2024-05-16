@@ -22,7 +22,7 @@
 namespace plz {
     class IPizzaFactory {
         public:
-            IPizzaFactory() {};
+            IPizzaFactory(double multiplier) : _multiplier(multiplier) {};
             ~IPizzaFactory() = default;
             void tryCreateIPizzas(std::string command, std::vector<std::shared_ptr<IPizza>>& pizzas);
 
@@ -42,6 +42,7 @@ namespace plz {
             };
 
         private:
+            double _multiplier;
             std::map<std::string, PizzaType> _pizzaTypeMap = {
                 {"margarita", PizzaType::Margarita},
                 {"regina", PizzaType::Regina},
@@ -55,7 +56,7 @@ namespace plz {
                 {"XL", PizzaSize::XL},
                 {"XXL", PizzaSize::XXL}
             };
-            std::map<PizzaType, std::function<std::shared_ptr<IPizza>(PizzaSize size, double multiplier)>> _primitiveFactory = {
+            std::map<PizzaType, std::function<std::shared_ptr<IPizza>(PizzaSize size, double multiplier)>> _pizzaFactory = {
                 {PizzaType::Margarita, [](PizzaSize size, double multiplier) { return std::make_shared<Pizza::Margarita>(size, multiplier); }},
                 {PizzaType::Regina, [](PizzaSize size, double multiplier) { return std::make_shared<Pizza::Regina>(size, multiplier); }},
                 {PizzaType::Americana, [](PizzaSize size, double multiplier) { return std::make_shared<Pizza::Americana>(size, multiplier); }},

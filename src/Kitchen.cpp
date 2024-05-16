@@ -25,7 +25,7 @@ void plz::Kitchen::initPipe(UNUSED SIDE side)
 
 // Reception side
 
-void plz::Kitchen::displayStatus()
+void plz::Kitchen::displayIngredients()
 {
 }
 
@@ -36,6 +36,20 @@ void plz::Kitchen::queuePizza(UNUSED std::shared_ptr<plz::IPizza> pizza)
 std::string plz::Kitchen::_fetch()
 {
     return "";
+}
+
+bool plz::Kitchen::isBusy()
+{
+    return false;
+}
+
+void plz::Kitchen::close()
+{
+}
+
+std::pair<std::chrono::seconds, std::chrono::milliseconds> plz::Kitchen::idleTime()
+{
+    return {std::chrono::seconds(0), std::chrono::milliseconds(0)};
 }
 
 
@@ -57,4 +71,14 @@ void plz::Kitchen::_cookPizzas()
 {
 }
 
+void plz::Kitchen::_sendBusy()
+{
+}
 
+void plz::Kitchen::_sendIdle()
+{
+}
+
+void plz::Kitchen::_send(std::string message)
+{
+}

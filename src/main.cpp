@@ -5,24 +5,35 @@
 ** main
 */
 
-#include "IPizzaFactory.hpp"
+#include "Setup.hpp"
 #include "macros.hpp"
+#include "IPizzaFactory.hpp"
 #include <iostream>
 
-int main(
-    UNUSED int argc,
-    UNUSED char *argv[],
-    UNUSED char *env[]
-)
+int main(int argc, char *argv[], UNUSED char *env[])
 {
-    plz::IPizzaFactory factory = plz::IPizzaFactory(5);
-    std::vector<std::shared_ptr<plz::IPizza>> pizzas;
+    plz::Setup setup;
+
     try {
-        std::string command;
-        std::getline(std::cin, command);
-        factory.tryCreateIPizzas(command, pizzas);
-    } catch (const plz::IPizzaFactory::IPizzaFactoryException &e) {
+        setup = plz::Setup(argc, argv);
+    } catch (const std::exception& e) {
         std::cerr << e.what() << std::endl;
+        return 84;
+    }
+
+    std::cout << "Multiplier: " << setup.multiplier() << std::endl;
+    std::cout << "Cooks: " << setup.cooks() << std::endl;
+    std::cout << "Restock Time: " << setup.restock() << std::endl;
+
+    plz::IPizzaFactory factory = plz::IPizzaFactory(setup.multiplier());
+    std::vector<std::shared_ptr<plz::IPizza>> pizzas;
+    std::string command;
+    while (std::getline(std::cin, command)) {
+        try {
+            factory.tryCreateIPizzas(command, pizzas);
+        } catch (const plz::IPizzaFactory::IPizzaFactoryException &e) {
+            std::cerr << e.what() << std::endl;
+        }
     }
     return 0;
 }

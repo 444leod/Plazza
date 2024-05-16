@@ -79,6 +79,6 @@ void plz::Kitchen::_sendIdle()
 {
 }
 
-void plz::Kitchen::_send(std::string message)
+void plz::Kitchen::_send(UNUSED std::string message)
 {
 }

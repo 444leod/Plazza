@@ -10,6 +10,7 @@ NAME = plazza
 SRC =	./src/main.cpp \
 		./src/Kitchen.cpp \
 		./src/Reception.cpp \
+		./src/Cooker.cpp \
 		./src/Pizzas/IPizzaFactory.cpp \
 
 OBJ = $(SRC:.cpp=.o)

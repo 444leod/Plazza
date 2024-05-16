@@ -5,32 +5,23 @@
 ** main
 */
 
+#include "Setup.hpp"
 #include "macros.hpp"
-#include <cstdint>
 #include <iostream>
 
-int main(
-    UNUSED int argc,
-    char *argv[],
-    UNUSED char *env[]
-)
+int main(int argc, char *argv[], UNUSED char *env[])
 {
-    double multiplier;
-    std::uint32_t nbCooks;
-    std::uint32_t restockTime;
+    plz::Setup setup;
 
     try {
-        multiplier = std::stod(argv[1]);
-        nbCooks = std::stoi(argv[2]);
-        restockTime = std::stoi(argv[3]);
-    } catch (std::exception &e) {
+        setup = plz::Setup(argc, argv);
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
         return 84;
     }
-    if (nbCooks <= 0)
-        return 84;
-    if (multiplier < 0)
-        return 84;
 
-    (void) restockTime;
+    std::cout << "Multiplier: " << setup.multiplier() << std::endl;
+    std::cout << "Cooks: " << setup.cooks() << std::endl;
+    std::cout << "Restock Time: " << setup.restock() << std::endl;
     return 0;
 }

@@ -44,6 +44,8 @@ namespace plz {
 
 
             std::map<std::string, std::function<void(std::string)>> _commands = {
+                {"", [this](UNUSED std::string command) {}
+                },
                 {"status", [this](UNUSED std::string command) {
                     this->_reception->displayKitchenStatus();
                 }},

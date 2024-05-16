@@ -36,8 +36,6 @@ std::optional<std::string> plz::Runner::getCommand()
         return std::nullopt;
     if (std::cin.fail())
         throw RunnerException("Error while reading command");
-    if (command.empty())
-        return std::nullopt;
     return command;
 
 }

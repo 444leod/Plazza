@@ -6,7 +6,6 @@
 */
 
 #include "IPizza.hpp"
-#include "macros.hpp"
 
 #pragma once
 
@@ -18,7 +17,6 @@ namespace plz {
                 _type(type),
                 _ingredients(ingredients),
                 _bakingTime(bakingTime) {};
-            ~APizza() = default;
             virtual plz::PizzaSize getSize() const { return _size; };
             virtual plz::PizzaType getType() const { return _type; };
             virtual const plz::Ingredrients getIngredients() const { return _ingredients; };

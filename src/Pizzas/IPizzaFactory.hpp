@@ -44,9 +44,16 @@ namespace plz {
         private:
             std::map<std::string, PizzaType> _pizzaTypeMap = {
                 {"margarita", PizzaType::Margarita},
-                {"regina:", PizzaType::Regina},
+                {"regina", PizzaType::Regina},
                 {"americana", PizzaType::Americana},
                 {"fantasia", PizzaType::Fantasia}
+            };
+            std::map<std::string, PizzaSize> _pizzaSizeMap = {
+                {"S", PizzaSize::S},
+                {"M", PizzaSize::M},
+                {"L", PizzaSize::L},
+                {"XL", PizzaSize::XL},
+                {"XXL", PizzaSize::XXL}
             };
             std::map<PizzaType, std::function<std::shared_ptr<IPizza>(PizzaSize size, double multiplier)>> _primitiveFactory = {
                 {PizzaType::Margarita, [](PizzaSize size, double multiplier) { return std::make_shared<Pizza::Margarita>(size, multiplier); }},

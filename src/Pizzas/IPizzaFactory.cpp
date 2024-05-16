@@ -18,8 +18,22 @@ void plz::IPizzaFactory::tryCreateIPizzas(std::string command, UNUSED std::vecto
     {
         std::string pizzaType, pizzaSize, nbPizzas, errorVerif;
         std::istringstream iss(parsed);
+        int nbPizzasInt;
         iss >> pizzaType >> pizzaSize >> nbPizzas;
         if (iss.fail() || iss >> errorVerif)
             throw IPizzaFactoryException("Invalid pizza command!");
+        if (_pizzaTypeMap.find(pizzaType) == _pizzaTypeMap.end())
+            throw IPizzaFactoryException("Invalid pizza type!");
+        if (_pizzaSizeMap.find(pizzaSize) == _pizzaSizeMap.end())
+            throw IPizzaFactoryException("Invalid pizza size!");
+        if (nbPizzas[0] != 'x')
+            throw IPizzaFactoryException("Invalid prefix for number of pizzas!");
+        try {
+            nbPizzasInt = std::stoi(nbPizzas.erase(0, 1));
+        } catch (std::exception &e) {
+            throw IPizzaFactoryException("Invalid number of pizzas!");
+        }
+        if (nbPizzasInt <= 0 || nbPizzasInt > 99)
+            throw IPizzaFactoryException("Invalid number of pizzas, must be between 1 and 99!");
     }
 }

@@ -8,6 +8,7 @@
 NAME = plazza
 
 SRC =	./src/main.cpp \
+		./src/Runner.cpp \
 		./src/Kitchen.cpp \
 		./src/Reception.cpp \
 		./src/Pizzaiolo.cpp \

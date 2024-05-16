@@ -35,23 +35,23 @@ namespace plz {
                 if (m <= 0)
                     throw SetupException("Multiplier cannot be negative or zero.");
                 if (c < 0)
-                    throw SetupException("Cannot have negative amount of cooks.");
+                    throw SetupException("Cannot have negative amount of pizzaiolos.");
                 if (r < 0)
                     throw SetupException("Restock time cannot be negative.");
                 this->_multiplier = m;
-                this->_cooks = c;
+                this->_pizzaiolos = c;
                 this->_restock = r;
             }
             ~Setup() = default;
 
             double multiplier() const { return this->_multiplier; }
-            std::uint32_t cooks() const { return this->_cooks; }
+            std::uint32_t pizzaiolos() const { return this->_pizzaiolos; }
             std::uint32_t restock() const { return this->_restock; }
 
             const Setup& operator=(const Setup& other)
             {
                 this->_multiplier = other.multiplier();
-                this->_cooks = other.cooks();
+                this->_pizzaiolos = other.pizzaiolos();
                 this->_restock = other.restock();
                 return *this;
             };
@@ -59,7 +59,7 @@ namespace plz {
         protected:
         private:
             double _multiplier;
-            std::uint32_t _cooks;
+            std::uint32_t _pizzaiolos;
             std::uint32_t _restock;
     };
 }

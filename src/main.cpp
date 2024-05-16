@@ -22,7 +22,7 @@ int main(int argc, char *argv[], UNUSED char *env[])
     }
 
     std::cout << "Multiplier: " << setup.multiplier() << std::endl;
-    std::cout << "Cooks: " << setup.cooks() << std::endl;
+    std::cout << "Pizzaiolos: " << setup.pizzaiolos() << std::endl;
     std::cout << "Restock Time: " << setup.restock() << std::endl;
 
     plz::IPizzaFactory factory = plz::IPizzaFactory(setup.multiplier());

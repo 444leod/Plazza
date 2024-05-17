@@ -11,7 +11,3 @@ plz::NamedPipes::NamedPipes(const std::string& path) : _path(path)
 {
     mkfifo(this->_path.c_str(), 0666);
 }
-
-plz::NamedPipes::~NamedPipes()
-{
-}

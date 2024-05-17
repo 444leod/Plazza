@@ -27,8 +27,9 @@ namespace plz {
 
     class NamedPipes {
         public:
+            NamedPipes() = default;
             NamedPipes(const std::string& path);
-            ~NamedPipes();
+            ~NamedPipes() = default;
 
             void open(PipeSide side)
             {
@@ -64,10 +65,15 @@ namespace plz {
                 return *this;
             }
 
-            bool fail()
-            {
-                return this->_in.fail() || this->_out.fail();
+            NamedPipes& operator=(const NamedPipes& other) {
+                this->_path = other._path;
+                this->_side = other._side;
+                this->open(other._side);
+                this->_fail = other._fail;
+                return *this;
             }
+
+            bool fail() const { return this->_in.fail() || this->_out.fail(); }
 
         protected:
         private:

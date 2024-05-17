@@ -43,6 +43,16 @@ namespace plz {
             */
             ProcessSide side() const { return this->_side; }
 
+            /**
+             * @brief Gets the write end of the IpcTool.
+            */
+            NamedPipes& write() { return this->_writePipe; }
+
+            /**
+             * @brief Gets the read end of the IpcTool.
+            */
+            NamedPipes& read() { return this->_readPipe; }
+
         protected:
         private:
             const std::string& _channel;

@@ -9,6 +9,7 @@ NAME = plazza
 
 SRC =	src/main.cpp \
 		src/IPC/NamedPipes.cpp \
+		src/IPC/IpcTool.cpp \
 		src/Runner.cpp \
 		src/Kitchen.cpp \
 		src/Reception.cpp \

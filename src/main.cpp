@@ -5,26 +5,38 @@
 ** main
 */
 
+#include "Setup.hpp"
 #include "macros.hpp"
 #include "NamedPipes.hpp"
+#include "IPizzaFactory.hpp"
+#include "Runner.hpp"
+#include <iostream>
 
-int main(UNUSED int argc, UNUSED char *argv[], UNUSED char *env[])
+int main(int argc, char *argv[], UNUSED char *env[])
 {
-    std::string a = "";
-    plz::NamedPipes pipe("fifo");
+    plz::Setup setup;
 
-    if (fork() == 0) {
-        pipe.open(plz::PipeSide::WriteEnd);
-        std::cin >> a;
-        pipe << getpid() << " a dit " << a;
-    } else {
-        pipe.open(plz::PipeSide::ReadEnd);
-        while (true) {
-            pipe >> a;
-            if (pipe.fail()) break;
-            std::cout << a << " ";
-        }
-        std::cout << std::endl;
+    try {
+        setup = plz::Setup(argc, argv);
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
+    }
+
+    std::cout << "Multiplier: " << setup.multiplier() << std::endl;
+    std::cout << "Pizzaiolos: " << setup.pizzaiolos() << std::endl;
+    std::cout << "Restock Time: " << setup.restock() << std::endl;
+
+    plz::IPizzaFactory factory = plz::IPizzaFactory(setup.multiplier());
+
+    std::shared_ptr<plz::Reception> reception = std::make_shared<plz::Reception>(setup, factory);
+    plz::Runner runner = plz::Runner(reception);
+
+    try {
+        runner.run();
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << std::endl;
+        return 84;
     }
     return 0;
 }

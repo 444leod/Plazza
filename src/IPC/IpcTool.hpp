@@ -36,20 +36,25 @@ namespace plz {
 
             /**
              * @brief Gets the channel prefix.
+             * @return A std::string containing the channel prefix.
             */
             const std::string& channel() const { return this->_channel; }
+
             /**
              * @brief Gets the side of the (process's) IpcTool.
+             * @return A ProcessSide value.
             */
             ProcessSide side() const { return this->_side; }
 
             /**
              * @brief Gets the write end of the IpcTool.
+             * @return A reference to the `NamedPipe` used for writing.
             */
             NamedPipes& write() { return this->_writePipe; }
 
             /**
              * @brief Gets the read end of the IpcTool.
+             * @return A reference to the `NamedPipe` used for reading.
             */
             NamedPipes& read() { return this->_readPipe; }
 

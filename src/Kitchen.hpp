@@ -9,6 +9,7 @@
 
 #include "IPizza.hpp"
 #include "Pizzaiolo.hpp"
+#include "Ingredients.hpp"
 
 #include <cstdint>
 #include <string>
@@ -31,14 +32,17 @@ namespace plz {
             void initPipe(Kitchen::SIDE);
             uint32_t pizzaiolos() { return _pizzaiolosNumber; }
             uint32_t restock() { return _restock; }
+            uint32_t id() { return _id; }
 
 
         private:
             int _pid;
+            static uint32_t _nextId;
+            uint32_t _id = 0;
 
         // Reception side
         public:
-            plz::Ingredrients getIngredients();
+            const plz::Ingredients getIngredients();
             void queuePizza(std::shared_ptr<plz::IPizza> pizza);
             bool isBusy();
             void close();
@@ -67,9 +71,13 @@ namespace plz {
 
             uint32_t _pizzaiolosNumber = 0;
             uint32_t _restock = 0;
+            uint32_t _availablePizzaiolos = 0;
+            uint32_t _availableStorage = 0;
             std::vector<std::shared_ptr<plz::IPizza>> _pizzas = {};
-            std::shared_ptr<plz::Ingredrients> _ingredients = std::make_shared<plz::Ingredrients>(5, 5, 5, 5, 5, 5, 5, 5 ,5);
+            std::shared_ptr<plz::Ingredients> _ingredients = std::make_shared<plz::Ingredients>(5, 5, 5, 5, 5, 5, 5, 5 ,5);
             std::chrono::time_point<std::chrono::system_clock> _lastActivity;
             std::vector<std::shared_ptr<plz::Pizzaiolo>> _pizzaiolos = {};
     };
 }
+
+inline uint32_t plz::Kitchen::_nextId = 0;

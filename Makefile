@@ -13,6 +13,7 @@ SRC =	./src/main.cpp \
 		./src/Reception.cpp \
 		./src/Pizzaiolo.cpp \
 		./src/Pizzas/IPizzaFactory.cpp \
+		./src/Pizzas/Ingredients.cpp \
 
 OBJ = $(SRC:.cpp=.o)
 

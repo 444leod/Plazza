@@ -5,9 +5,11 @@
 ** IPizza
 */
 
-#include <cstdint>
 
 #pragma once
+
+#include <cstdint>
+#include "Ingredients.hpp"
 
 namespace plz {
     enum PizzaType {
@@ -24,25 +26,25 @@ namespace plz {
         XL = 8,
         XXL = 16
     };
-    
-    struct Ingredrients {
-        std::uint32_t dough;
-        std::uint32_t tomato;
-        std::uint32_t gruyere;
-        std::uint32_t ham;
-        std::uint32_t mushrooms;
-        std::uint32_t steak;
-        std::uint32_t eggplant;
-        std::uint32_t goatCheese;
-        std::uint32_t chiefLove;
-    };
+
+    // struct Ingredients {
+    //     std::uint32_t dough;
+    //     std::uint32_t tomato;
+    //     std::uint32_t gruyere;
+    //     std::uint32_t ham;
+    //     std::uint32_t mushrooms;
+    //     std::uint32_t steak;
+    //     std::uint32_t eggplant;
+    //     std::uint32_t goatCheese;
+    //     std::uint32_t chiefLove;
+    // };
 
     class IPizza {
         public:
             virtual ~IPizza() = default;
             virtual plz::PizzaSize getSize() const = 0;
             virtual plz::PizzaType getType() const = 0;
-            virtual const plz::Ingredrients getIngredients() const = 0;
+            virtual const plz::Ingredients getIngredients() const = 0;
 
         protected:
         private:

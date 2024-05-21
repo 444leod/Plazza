@@ -8,6 +8,7 @@
 #include "Ingredients.hpp"
 #include <algorithm>
 #include <cstdint>
+#include <iostream>
 
 plz::Ingredients::~Ingredients()
 {
@@ -108,4 +109,18 @@ plz::Ingredients &plz::Ingredients::operator=(const Ingredients &other)
     goatCheese = other.goatCheese;
     chiefLove = other.chiefLove;
     return *this;
+}
+
+std::ostream &operator<<(std::ostream &os, const plz::Ingredients &ingredients)
+{
+    os << "Dough: " << ingredients.dough << std::endl;
+    os << "Tomato: " << ingredients.tomato << std::endl;
+    os << "Gruyere: " << ingredients.gruyere << std::endl;
+    os << "Ham: " << ingredients.ham << std::endl;
+    os << "Mushrooms: " << ingredients.mushrooms << std::endl;
+    os << "Steak: " << ingredients.steak << std::endl;
+    os << "Eggplant: " << ingredients.eggplant << std::endl;
+    os << "Goat cheese: " << ingredients.goatCheese << std::endl;
+    os << "Chief love: " << ingredients.chiefLove << std::endl;
+    return os;
 }

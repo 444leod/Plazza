@@ -8,6 +8,7 @@
 #pragma once
 
 #include <cstdint>
+#include <ostream>
 
 namespace plz {
     class Ingredients {
@@ -37,3 +38,5 @@ namespace plz {
         private:
     };
 };
+
+std::ostream& operator<<(std::ostream& os, const plz::Ingredients& ingredients);

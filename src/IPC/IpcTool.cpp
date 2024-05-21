@@ -20,3 +20,13 @@ plz::IpcTool::IpcTool(const std::string& channel, ProcessSide side)
         this->_readPipe = NamedPipes(channel + "_ptc");
     }
 }
+
+void plz::IpcTool::send(const void *buf, size_t size)
+{
+    return this->_writePipe.send(buf, size);
+}
+
+void plz::IpcTool::receive(void *buf, size_t size)
+{
+    return this->_readPipe.send(buf, size);
+}

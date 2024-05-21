@@ -46,17 +46,8 @@ namespace plz {
             */
             ProcessSide side() const { return this->_side; }
 
-            /**
-             * @brief Gets the write end of the IpcTool.
-             * @return A reference to the `NamedPipe` used for writing.
-            */
-            NamedPipes& write() { return this->_writePipe; }
-
-            /**
-             * @brief Gets the read end of the IpcTool.
-             * @return A reference to the `NamedPipe` used for reading.
-            */
-            NamedPipes& read() { return this->_readPipe; }
+            void send(const void *buf, size_t size);
+            void receive(void *buf, size_t size);
 
         protected:
         private:

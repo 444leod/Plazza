@@ -44,51 +44,20 @@ namespace plz {
              * @brief Opens the FIFO for one side.
              * Use this to start using a NamedPipe.
             */
-            void open(PipeSide side)
-            {
-                if (this->_side != PipeSide::None)
-                    return;
-                if (side == PipeSide::ReadEnd) {
-                    this->_in = std::ifstream(this->_path);
-                    if (!this->_in.is_open())
-                        throw std::runtime_error("Failed to open FIFO.");
-                    this->_side = PipeSide::ReadEnd;
-                }
-                if (side == PipeSide::WriteEnd) {
-                    this->_out = std::ofstream(this->_path);
-                    if (!this->_out.is_open())
-                        throw std::runtime_error("Failed to open FIFO.");
-                    this->_side = PipeSide::WriteEnd;
-                }
-            }
+            void open(PipeSide side);
 
             /**
-             * @brief Writes into a FIFO.
-             *
-             * @param in The content to write. This has to be writable to an ofstream.
-             * @return A reference to the used NamedPipe.
+             * @brief Sends data through a NamedPipe.
             */
-            template<typename T>
-            NamedPipes& operator<<(const T& in) {
-                if (this->_side != PipeSide::WriteEnd)
-                    throw std::runtime_error("Cannot write into that side of the pipe.");
-                this->_out << in;
-                return *this;
-            }
+            void send(const void *buf, size_t size);
 
             /**
-             * @brief Reads from a FIFO.
-             *
-             * @param out The content buffer to write into. This has to readable from an ofstream.
-             * @return A reference to the used NamedPipe.
+             * @brief Reads from a named pipe.
             */
-            template<typename T>
-            NamedPipes& operator>>(T& out) {
-                if (this->_side != PipeSide::ReadEnd)
-                    throw std::runtime_error("Cannot read into that side of the pipe.");
-                this->_in >> out;
-                return *this;
-            }
+            void receive(void *buf, size_t size);
+
+           bool is_open() const { return this->_is_open; }
+           bool fail() const { return this->_fail; }
 
             /**
              * @brief Set operator for NamedPipes.
@@ -104,18 +73,12 @@ namespace plz {
                 return *this;
             }
 
-            /**
-             * @brief The state of the last FIFO operation.
-             * @return `true` if failed to read or write. `false` otherwise.
-            */
-            bool fail() const { return this->_in.fail() || this->_out.fail(); }
-
         protected:
         private:
+            int _fd = 0;
             std::string _path = "";
             PipeSide _side = PipeSide::None;
-            std::ifstream _in;
-            std::ofstream _out;
+            bool _is_open = false;
             bool _fail = false;
     };
 

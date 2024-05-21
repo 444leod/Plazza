@@ -67,11 +67,32 @@ uint32_t plz::Kitchen::nbOfAvailableStorage()
     return _availableStorage;
 }
 
-std::pair<std::chrono::seconds, std::chrono::milliseconds> plz::Kitchen::idleTime()
+std::chrono::milliseconds plz::Kitchen::idleTime()
 {
-    return {std::chrono::seconds(0), std::chrono::milliseconds(0)};
+    return std::chrono::milliseconds(0);
 }
 
+void plz::Kitchen::waitFork()
+{
+    // auto start = std::chrono::system_clock::now();
+    // auto end = std::chrono::system_clock::now();
+    // while (!this->_readForkInit()) {
+    //     end = std::chrono::system_clock::now();
+    //     std::chrono::duration<double> elapsed_seconds = end - start;
+    //     if (elapsed_seconds.count() > 1)
+    //         throw std::runtime_error("Fork timeout");
+    // }
+}
+
+bool plz::Kitchen::_readForkInit()
+{
+    // static auto start = std::chrono::system_clock::now();
+
+    // if (std::chrono::system_clock::now() - start > std::chrono::milliseconds(900)) {
+    //     return true;
+    // }
+    return false;
+}
 
 // Kitchen side
 

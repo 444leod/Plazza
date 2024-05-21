@@ -10,6 +10,7 @@
 #include "IPizza.hpp"
 #include "Pizzaiolo.hpp"
 #include "Ingredients.hpp"
+#include "Fork.hpp"
 
 #include <cstdint>
 #include <string>
@@ -18,6 +19,14 @@
 #include <chrono>
 
 namespace plz {
+
+    struct KitchenDatas {
+        uint32_t pizzaiolos;
+        uint32_t restock;
+        plz::Ingredients ingredients;
+        std::chrono::milliseconds idleTime;
+    };
+
     class Kitchen {
         // Global
         public:
@@ -33,12 +42,14 @@ namespace plz {
             uint32_t pizzaiolos() { return _pizzaiolosNumber; }
             uint32_t restock() { return _restock; }
             uint32_t id() { return _id; }
+            void setFork(std::shared_ptr<plz::Fork> fork) { _fork = fork; }
 
 
         private:
             int _pid;
             static uint32_t _nextId;
             uint32_t _id = 0;
+            std::shared_ptr<plz::Fork> _fork;
 
         // Reception side
         public:
@@ -48,7 +59,9 @@ namespace plz {
             void close();
             uint32_t nbOfAvailablePizzaiolos();
             uint32_t nbOfAvailableStorage();
-            std::pair<std::chrono::seconds, std::chrono::milliseconds> idleTime();
+            std::chrono::milliseconds idleTime();
+            void waitFork();
+            bool _readForkInit();
 
         private:
             std::string _fetch();

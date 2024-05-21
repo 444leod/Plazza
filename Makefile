@@ -14,13 +14,14 @@ SRC =	./src/main.cpp \
 		./src/Pizzaiolo.cpp \
 		./src/Pizzas/IPizzaFactory.cpp \
 		./src/Pizzas/Ingredients.cpp \
+		./src/lib/Fork.cpp \
 
 OBJ = $(SRC:.cpp=.o)
 
 CC = g++
 
 CXXFLAGS	+=	-Wall -Wextra -Werror -Wpedantic -std=c++20
-CXXFLAGS 	+=	-I./include -I./src/Pizzas
+CXXFLAGS 	+=	-I./include -I./src/Pizzas -I./src/lib
 
 all:	$(NAME)
 

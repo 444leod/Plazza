@@ -46,7 +46,12 @@ namespace plz {
             */
             ProcessSide side() const { return this->_side; }
 
+            template<typename T>
+            void send(const T& element) { return send(&element, sizeof(T)); }
             void send(const void *buf, size_t size);
+
+            template<typename T>
+            void receive(T& element) { return receive(&element, sizeof(T)); }
             void receive(void *buf, size_t size);
 
         protected:

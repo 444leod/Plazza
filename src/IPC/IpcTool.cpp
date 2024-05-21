@@ -15,9 +15,13 @@ plz::IpcTool::IpcTool(const std::string& channel, ProcessSide side)
     if (this->_side == ProcessSide::Parent) {
         this->_writePipe = NamedPipes(channel + "_ptc");
         this->_readPipe = NamedPipes(channel + "_ctp");
+        this->_readPipe.open(plz::PipeSide::ReadEnd);
+        this->_writePipe.open(plz::PipeSide::WriteEnd);
     } else {
         this->_writePipe = NamedPipes(channel + "_ctp");
         this->_readPipe = NamedPipes(channel + "_ptc");
+        this->_writePipe.open(plz::PipeSide::WriteEnd);
+        this->_readPipe.open(plz::PipeSide::ReadEnd);
     }
 }
 
@@ -28,5 +32,5 @@ void plz::IpcTool::send(const void *buf, size_t size)
 
 void plz::IpcTool::receive(void *buf, size_t size)
 {
-    return this->_readPipe.send(buf, size);
+    return this->_readPipe.receive(buf, size);
 }

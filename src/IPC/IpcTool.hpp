@@ -7,7 +7,8 @@
 
 #pragma once
 
-#include <NamedPipes.hpp>
+#include "Packet.hpp"
+#include "NamedPipes.hpp"
 
 namespace plz {
 
@@ -46,13 +47,33 @@ namespace plz {
             */
             ProcessSide side() const { return this->_side; }
 
-            template<typename T>
-            void send(const T& element) { return send(&element, sizeof(T)); }
-            void send(const void *buf, size_t size);
+            /**
+             * @brief Sends a packet
+            */
+            ssize_t send(const Packet& packet);
 
-            template<typename T>
-            void receive(T& element) { return receive(&element, sizeof(T)); }
-            void receive(void *buf, size_t size);
+            /**
+             * @brief Sends a buffer through Named Pipes.
+             *
+             * @param buf The data buffer to send.
+             * @param size The size of the buffer in bytes.
+            */
+            ssize_t send(const void *buf, size_t size);
+
+
+            /**
+             * @brief Reads a packet
+            */
+            Packet receive();
+
+            /**
+             * @brief Reads from a Named Pipe into a buffer of a given size.
+             *
+             * @param buf The buffer to put the read data into.
+             * @param size The amount of data to read in bytes.
+            */
+            ssize_t receive(void *buf, size_t size);
+
 
         protected:
         private:

@@ -25,22 +25,26 @@ void plz::NamedPipes::open(plz::PipeSide side)
         this->_is_open = true;
 }
 
-void plz::NamedPipes::send(const void *buf, size_t size)
+ssize_t plz::NamedPipes::send(const void *buf, size_t size)
 {
-    if (!this->_is_open) {
+    ssize_t s = 0;
+
+    if (!this->_is_open)
         throw std::runtime_error("NamedPipe not open.");
-        return;
-    }
-    if (::write(this->_fd, buf, size) < 0)
+
+    if ((s = ::write(this->_fd, buf, size)) < 0)
         throw std::runtime_error("Could not write properly.");
+    return s;
 }
 
-void plz::NamedPipes::receive(void *buf, size_t size)
+ssize_t plz::NamedPipes::receive(void *buf, size_t size)
 {
-    if (!this->_is_open) {
+    ssize_t s = 0;
+
+    if (!this->_is_open)
         throw std::runtime_error("NamedPipe not open.");
-        return;
-    }
-    if (::read(this->_fd, buf, size) < 0)
+
+    if ((s = ::read(this->_fd, buf, size)) < 0)
         throw std::runtime_error("Could not read properly.");
+    return s;
 }

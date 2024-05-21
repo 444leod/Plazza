@@ -25,12 +25,27 @@ plz::IpcTool::IpcTool(const std::string& channel, ProcessSide side)
     }
 }
 
-void plz::IpcTool::send(const void *buf, size_t size)
+ssize_t plz::IpcTool::send(const Packet& packet)
+{
+    return this->_writePipe.send(packet.raw(), packet.size());
+}
+
+ssize_t plz::IpcTool::send(const void *buf, size_t size)
 {
     return this->_writePipe.send(buf, size);
 }
 
-void plz::IpcTool::receive(void *buf, size_t size)
+plz::Packet plz::IpcTool::receive()
+{
+    Packet packet;
+    unsigned char byte = 0;
+
+    while (this->_readPipe.receive(&byte, 1) > 0)
+        packet.append(&byte, 1);
+    return packet;
+}
+
+ssize_t plz::IpcTool::receive(void *buf, size_t size)
 {
     return this->_readPipe.receive(buf, size);
 }

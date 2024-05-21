@@ -49,12 +49,12 @@ namespace plz {
             /**
              * @brief Sends data through a NamedPipe.
             */
-            void send(const void *buf, size_t size);
+            ssize_t send(const void *buf, size_t size);
 
             /**
              * @brief Reads from a named pipe.
             */
-            void receive(void *buf, size_t size);
+            ssize_t receive(void *buf, size_t size);
 
            bool is_open() const { return this->_is_open; }
 

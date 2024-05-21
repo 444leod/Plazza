@@ -24,8 +24,8 @@ namespace plz {
 
         private:
             std::shared_ptr<plz::Kitchen> _addKitchen();
-            void _spreadPizzas(std::map<std::shared_ptr<plz::Kitchen>, std::pair<uint32_t, uint32_t>> kitchensStatus);
-            bool _queuePizza(std::map<std::shared_ptr<plz::Kitchen>, std::pair<uint32_t, uint32_t>> kitchensStatus, std::shared_ptr<plz::IPizza> pizza);
+            void _spreadPizzas(std::map<std::shared_ptr<plz::Kitchen>, plz::KitchenDatas> kitchensStatus);
+            bool _queuePizza(std::map<std::shared_ptr<plz::Kitchen>, plz::KitchenDatas>& kitchensStatus, std::shared_ptr<plz::IPizza> pizza);
 
             uint32_t _pizzaiolos;
             uint32_t _restock;

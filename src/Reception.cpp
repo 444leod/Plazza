@@ -8,6 +8,7 @@
 #include "Reception.hpp"
 #include "IPizzaFactory.hpp"
 #include "macros.hpp"
+#include "Fork.hpp"
 
 #include <iostream>
 
@@ -15,34 +16,50 @@ plz::Reception::Reception(plz::Setup& setup, plz::IPizzaFactory& factory) : _piz
 {
 }
 
-bool plz::Reception::_queuePizza(std::map<std::shared_ptr<plz::Kitchen>, std::pair<uint32_t, uint32_t>> kitchensStatus, std::shared_ptr<plz::IPizza> pizza)
+bool plz::Reception::_queuePizza(std::map<std::shared_ptr<plz::Kitchen>, plz::KitchenDatas>& kitchensStatus, std::shared_ptr<plz::IPizza> pizza)
 {
+    std::vector<std::shared_ptr<plz::Kitchen>> kitchenByIdleTime;
     for (auto& kitchen : _kitchens) {
-        if (kitchensStatus[kitchen].first == kitchen->pizzaiolos() && kitchensStatus[kitchen].second == kitchen->restock()) {
+        if (kitchensStatus[kitchen].idleTime < kitchen->idleTime()) {
+            kitchenByIdleTime.push_back(kitchen);
+        }
+    }
+    std::sort(kitchenByIdleTime.begin(), kitchenByIdleTime.end(), [&](std::shared_ptr<plz::Kitchen> a, std::shared_ptr<plz::Kitchen> b) {
+        return kitchensStatus[a].idleTime < kitchensStatus[b].idleTime;
+    });
+
+    for (auto& kitchen : kitchenByIdleTime) {
+        if (kitchensStatus[kitchen].pizzaiolos == kitchen->pizzaiolos() && kitchensStatus[kitchen].restock == kitchen->restock() && kitchensStatus[kitchen].ingredients >= pizza->getIngredients()) {
             kitchen->queuePizza(pizza);
-            kitchensStatus[kitchen].first--;
-            kitchensStatus[kitchen].second--;
+
+            kitchensStatus[kitchen].pizzaiolos--;
+            kitchensStatus[kitchen].restock--;
+            kitchensStatus[kitchen].ingredients -= pizza->getIngredients();
             return true;
         }
     }
     for (auto& kitchen : _kitchens) {
-        if (kitchensStatus[kitchen].first > 0) {
+        if (kitchensStatus[kitchen].pizzaiolos > 0 && kitchensStatus[kitchen].ingredients >= pizza->getIngredients()) {
             kitchen->queuePizza(pizza);
-            kitchensStatus[kitchen].first--;
+
+            kitchensStatus[kitchen].pizzaiolos--;
+            kitchensStatus[kitchen].ingredients -= pizza->getIngredients();
             return true;
         }
     }
     for (auto& kitchen : _kitchens) {
-        if (kitchensStatus[kitchen].second > 0) {
+        if (kitchensStatus[kitchen].restock > 0 && kitchensStatus[kitchen].ingredients >= pizza->getIngredients()) {
             kitchen->queuePizza(pizza);
-            kitchensStatus[kitchen].second--;
+
+            kitchensStatus[kitchen].restock--;
+            kitchensStatus[kitchen].ingredients -= pizza->getIngredients();
             return true;
         }
     }
     return false;
 }
 
-void plz::Reception::_spreadPizzas(std::map<std::shared_ptr<plz::Kitchen>, std::pair<uint32_t, uint32_t>> kitchensStatus)
+void plz::Reception::_spreadPizzas(std::map<std::shared_ptr<plz::Kitchen>, plz::KitchenDatas> kitchensStatus)
 {
     for (auto& pizza : _pizzas) {
         if (!_queuePizza(kitchensStatus, pizza))
@@ -54,12 +71,17 @@ void plz::Reception::_spreadPizzas(std::map<std::shared_ptr<plz::Kitchen>, std::
 void plz::Reception::handleCommand(UNUSED std::string command)
 {
     _factory.tryCreateIPizzas(command, _pizzas);
-    std::map<std::shared_ptr<plz::Kitchen>, std::pair<uint32_t, uint32_t>> kitchensStatus;
-    _spreadPizzas(kitchensStatus);
-
+    std::map<std::shared_ptr<plz::Kitchen>, plz::KitchenDatas> kitchensStatus;
     for (auto& kitchen : _kitchens) {
-        kitchensStatus[kitchen] = std::make_pair(kitchen->nbOfAvailablePizzaiolos(), kitchen->nbOfAvailableStorage());
+        kitchensStatus[kitchen] = {
+            kitchen->nbOfAvailablePizzaiolos(),
+            kitchen->nbOfAvailableStorage(),
+            kitchen->getIngredients(),
+            kitchen->idleTime()
+        };
     }
+
+    _spreadPizzas(kitchensStatus);
 }
 
 void plz::Reception::displayKitchenStatus()
@@ -123,5 +145,17 @@ std::shared_ptr<plz::Kitchen> plz::Reception::_addKitchen()
     std::shared_ptr<plz::Kitchen> kitchen = std::make_shared<plz::Kitchen>(_pizzaiolos, _restock);
 
     _kitchens.push_back(kitchen);
+    std::shared_ptr<plz::Fork> fork = std::make_shared<plz::Fork>();
+    kitchen->setFork(fork);
+
+    if (fork->isChild()) {
+        kitchen->setPid(fork->getParentPid());
+        kitchen->initPipe(plz::Kitchen::SIDE::KITCHEN);
+        kitchen->run();
+        std::exit(0);
+    }
+    kitchen->setPid(fork->getChildPid());
+    kitchen->initPipe(plz::Kitchen::SIDE::RECEPTION);
+    kitchen->waitFork();
     return kitchen;
 }

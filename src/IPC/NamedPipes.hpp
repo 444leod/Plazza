@@ -57,7 +57,6 @@ namespace plz {
             void receive(void *buf, size_t size);
 
            bool is_open() const { return this->_is_open; }
-           bool fail() const { return this->_fail; }
 
             /**
              * @brief Set operator for NamedPipes.
@@ -69,7 +68,6 @@ namespace plz {
                 this->_path = other._path;
                 this->_side = other._side;
                 this->open(other._side);
-                this->_fail = other._fail;
                 return *this;
             }
 
@@ -79,7 +77,6 @@ namespace plz {
             std::string _path = "";
             PipeSide _side = PipeSide::None;
             bool _is_open = false;
-            bool _fail = false;
     };
 
 }

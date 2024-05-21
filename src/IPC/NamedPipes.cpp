@@ -20,7 +20,7 @@ void plz::NamedPipes::open(plz::PipeSide side)
     auto flags = side == PipeSide::ReadEnd ? O_RDONLY : O_WRONLY;
     this->_fd = ::open(this->_path.c_str(), flags);
     if (this->_fd < 0)
-        this->_fail = 1;
+        throw std::runtime_error("Could not open fifo.");
     else
         this->_is_open = true;
 }
@@ -28,19 +28,25 @@ void plz::NamedPipes::open(plz::PipeSide side)
 void plz::NamedPipes::send(const void *buf, size_t size)
 {
     if (!this->_is_open) {
-        this->_fail = true;
+        throw std::runtime_error("NamedPipe not open.");
         return;
     }
-    if (::write(this->_fd, buf, size) < 0)
-        this->_fail = true;
+    std::cout << "[WRITE] | (" << this->_path << ") FD:" << this->_fd << std::endl;
+    if (::write(this->_fd, buf, size) < 0) {
+        perror("send");
+        throw std::runtime_error("Could not write properly.");
+    }
 }
 
 void plz::NamedPipes::receive(void *buf, size_t size)
 {
     if (!this->_is_open) {
-        this->_fail = true;
+        throw std::runtime_error("NamedPipe not open.");
         return;
     }
-    if (::read(this->_fd, buf, size) < 0)
-        this->_fail = 1;
+    std::cout << "[READ] | (" << this->_path << ") FD:" << this->_fd << std::endl;
+    if (::read(this->_fd, buf, size) < 0) {
+        perror("receive");
+        throw std::runtime_error("Could not read properly.");
+    }
 }

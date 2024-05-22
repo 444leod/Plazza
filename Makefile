@@ -12,6 +12,7 @@ SRC =	./src/main.cpp \
 		./src/Kitchen.cpp \
 		./src/Reception.cpp \
 		./src/Pizzaiolo.cpp \
+		./src/ThreadPool.cpp \
 		./src/Pizzas/IPizzaFactory.cpp \
 
 OBJ = $(SRC:.cpp=.o)

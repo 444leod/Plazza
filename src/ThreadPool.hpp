@@ -15,7 +15,7 @@
 
 class ThreadPool {
     public:
-        ThreadPool(int num_threads);
+        ThreadPool(std::uint32_t num_threads);
         ~ThreadPool();
         void Start();
         void QueueJob(const std::function<void()>& job);
@@ -25,6 +25,7 @@ class ThreadPool {
     private:
         void ThreadLoop();
 
+        std::uint32_t _num_threads;
         bool _should_terminate = false;
         std::mutex _queue_mutex;
         std::condition_variable _mutex_condition;

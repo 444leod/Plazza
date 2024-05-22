@@ -52,3 +52,21 @@ void ThreadPool::Stop() {
     }
     _threads.clear();
 }
+
+void ThreadPool::ThreadLoop() {
+    while (1) {
+        std::function<void()> job;
+        {
+            std::unique_lock<std::mutex> lock(_queue_mutex);
+            _mutex_condition.wait(lock, [this] {
+                return !_jobs.empty() || _should_terminate;
+            });
+            if (_should_terminate) {
+                return;
+            }
+            job = _jobs.front();
+            _jobs.pop();
+        }
+        job();
+    }
+}

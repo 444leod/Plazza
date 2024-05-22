@@ -61,9 +61,19 @@ bool plz::Reception::_queuePizza(std::map<std::shared_ptr<plz::Kitchen>, plz::Ki
 
 void plz::Reception::_spreadPizzas(std::map<std::shared_ptr<plz::Kitchen>, plz::KitchenDatas> kitchensStatus)
 {
+    std::shared_ptr<plz::Kitchen> kitchen;
+
     for (auto& pizza : _pizzas) {
-        if (!_queuePizza(kitchensStatus, pizza))
-            _addKitchen()->queuePizza(pizza);
+        if (!_queuePizza(kitchensStatus, pizza)) {
+            kitchen = _addKitchen();
+            kitchen->queuePizza(pizza);
+            kitchensStatus[kitchen] = {
+                kitchen->nbOfAvailablePizzaiolos(),
+                kitchen->nbOfAvailableStorage(),
+                kitchen->getIngredients(),
+                kitchen->idleTime()
+            };
+        }
     }
     _pizzas.clear();
 }

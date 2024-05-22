@@ -74,12 +74,11 @@ namespace plz {
             */
             ssize_t receive(void *buf, size_t size);
 
-
         protected:
         private:
             const std::string& _channel;
             ProcessSide _side;
-            NamedPipes _readPipe;
             NamedPipes _writePipe;
+            NamedPipes _readPipe;
     };
 }

@@ -38,7 +38,7 @@ namespace plz {
              * @param path The name of the FIFO to create.
             */
             NamedPipes(const std::string& path);
-            ~NamedPipes() = default;
+            ~NamedPipes();
 
             /**
              * @brief Opens the FIFO for one side.

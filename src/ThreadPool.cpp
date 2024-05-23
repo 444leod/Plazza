@@ -12,7 +12,7 @@
  * @param num_threads Number of threads to create
 */
 ThreadPool::ThreadPool(std::uint32_t num_threads)
-    : _num_threads(num_threads)
+    : _numThreads(num_threads)
 {
 }
 
@@ -28,7 +28,7 @@ ThreadPool::~ThreadPool()
  * @brief Start all threads in the pool and give them basic the ThreadLoop
 */
 void ThreadPool::Start() {
-    for (uint32_t i = 0; i < _num_threads; ++i) {
+    for (uint32_t i = 0; i < _numThreads; ++i) {
         _threads.emplace_back(std::thread(&ThreadPool::ThreadLoop, this));
     }
 }
@@ -39,10 +39,10 @@ void ThreadPool::Start() {
 */
 void ThreadPool::QueueJob(const std::function<void()>& job) {
     {
-        std::unique_lock<std::mutex> lock(_queue_mutex);
+        std::unique_lock<std::mutex> lock(_queueMutex);
         _jobs.push(job);
     }
-    _mutex_condition.notify_one();
+    _mutexCondition.notify_one();
 }
 
 /*
@@ -52,7 +52,7 @@ void ThreadPool::QueueJob(const std::function<void()>& job) {
 bool ThreadPool::Busy() {
     bool poolbusy;
     {
-        std::unique_lock<std::mutex> lock(_queue_mutex);
+        std::unique_lock<std::mutex> lock(_queueMutex);
         poolbusy = !_jobs.empty();
     }
     return poolbusy;
@@ -64,14 +64,23 @@ bool ThreadPool::Busy() {
 */
 void ThreadPool::Stop() {
     {
-        std::unique_lock<std::mutex> lock(_queue_mutex);
-        _should_terminate = true;
+        std::unique_lock<std::mutex> lock(_queueMutex);
+        _shouldTerminate = true;
     }
-    _mutex_condition.notify_all();
+    _mutexCondition.notify_all();
     for (auto& thread : _threads) {
         thread.join();
     }
     _threads.clear();
+}
+
+/*
+ * @brief Get the number of threads that are currently occupied
+ * @return The number of threads that are currently occupied
+*/
+std::uint32_t ThreadPool::OccupiedThreads() const {
+
+    return _numOccupiedThreads;
 }
 
 /*
@@ -81,16 +90,21 @@ void ThreadPool::ThreadLoop() {
     while (1) {
         std::function<void()> job;
         {
-            std::unique_lock<std::mutex> lock(_queue_mutex);
-            _mutex_condition.wait(lock, [this] {
-                return !_jobs.empty() || _should_terminate;
+            std::unique_lock<std::mutex> lock(_queueMutex);
+            _mutexCondition.wait(lock, [this] {
+                return !_jobs.empty() || _shouldTerminate;
             });
-            if (_should_terminate) {
+            if (_shouldTerminate) {
                 return;
             }
+            _numOccupiedThreads++;
             job = _jobs.front();
             _jobs.pop();
         }
         job();
+        {
+            std::unique_lock<std::mutex> lock(_queueMutex);
+            _numOccupiedThreads--;
+        }
     }
 }

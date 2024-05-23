@@ -24,8 +24,12 @@ int main()
         });
     }
 
-    while (pool.Busy()) {}
+    while (pool.Busy()) {
+        std::this_thread::sleep_for(std::chrono::milliseconds(10));
+        std::cout << pool.OccupiedThreads() << " threads are busy" << std::endl;
+    }
 
+    std::cout << pool.OccupiedThreads() << " threads are busy" << std::endl;
     pool.Stop();
 
     return 0;

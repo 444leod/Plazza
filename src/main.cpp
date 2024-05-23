@@ -7,6 +7,7 @@
 
 #include "Setup.hpp"
 #include "macros.hpp"
+#include "NamedPipes.hpp"
 #include "IPizzaFactory.hpp"
 #include "Runner.hpp"
 #include <iostream>

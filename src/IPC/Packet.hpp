@@ -21,9 +21,28 @@ namespace plz {
             Packet(const std::vector<std::byte>& bytes);
             ~Packet() = default;
 
+            /**
+             * @brief Gets the total size of the received packet.
+             * @warning This does not deminish with reading.
+            */
             std::size_t size() const { return this->_size; }
+            /**
+             * @brief Gets the remaining bytes in the packet.
+             * It accounts for read bytes.
+            */
+            std::size_t remains() const { return this->_size - this->_pos; }
+            /**
+             * @brief Gets the current reading position
+            */
             std::uint32_t pos() const { return this->_pos; }
+            /**
+             * @brief Appends new data to the packer
+            */
             void append(const void *data, std::size_t size);
+            /**
+             * @brief The raw data contained in the packet.
+             * @warning Does NOT account for read bytes.
+            */
             const void *raw() const;
 
             Packet& operator<<(bool data);

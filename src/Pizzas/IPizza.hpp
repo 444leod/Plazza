@@ -27,18 +27,6 @@ namespace plz {
         XXL = 16
     };
 
-    // struct Ingredients {
-    //     std::uint32_t dough;
-    //     std::uint32_t tomato;
-    //     std::uint32_t gruyere;
-    //     std::uint32_t ham;
-    //     std::uint32_t mushrooms;
-    //     std::uint32_t steak;
-    //     std::uint32_t eggplant;
-    //     std::uint32_t goatCheese;
-    //     std::uint32_t chiefLove;
-    // };
-
     class IPizza {
         public:
             virtual ~IPizza() = default;

@@ -5,25 +5,29 @@
 ** APizzaFactory
 */
 
+#pragma once
+
 #include "IPizza.hpp"
 #include "Margarita.hpp"
 #include "Regina.hpp"
 #include "Americana.hpp"
 #include "Fantasia.hpp"
+#include "macros.hpp"
 
+#include <iostream>
 #include <memory>
 #include <map>
 #include <vector>
 #include <functional>
 #include <sstream>
 
-#pragma once
 
 namespace plz {
     class IPizzaFactory {
         public:
             IPizzaFactory(double multiplier) : _multiplier(multiplier) {};
             ~IPizzaFactory() = default;
+            void createPizza(PizzaType type, PizzaSize size);
             void tryCreateIPizzas(std::string command, std::vector<std::shared_ptr<IPizza>>& pizzas);
 
             class IPizzaFactoryException : public std::exception {
@@ -58,4 +62,18 @@ namespace plz {
                 {PizzaType::Fantasia, [](PizzaSize size, double multiplier) { return std::make_shared<Pizza::Fantasia>(size, multiplier); }},
             };
     };
+}
+
+plz::Packet& operator>>(plz::Packet& packet, plz::IPizza& pizza)
+{
+    uint32_t s = pizza.getSize();
+    uint32_t t = pizza.getType();
+    auto i = pizza.getIngredients();
+    auto b = pizza.getBakingTime();
+    packet >> s >> t >> i >> b;
+    pizza.setSize(static_cast<plz::PizzaSize>(s));
+    pizza.setType(static_cast<plz::PizzaType>(t));
+    pizza.setIngredients(i);
+    pizza.setBakingTime(b);
+    return packet;
 }

@@ -5,26 +5,26 @@
 ** IPizza
 */
 
-#include <cstdint>
-
 #pragma once
 
+#include <cstdint>
+
 namespace plz {
-    enum PizzaType {
+    enum PizzaType : uint32_t {
         Regina = 1,
         Margarita = 2,
         Americana = 4,
         Fantasia = 8
     };
 
-    enum PizzaSize {
+    enum PizzaSize : uint32_t {
         S = 1,
         M = 2,
         L = 4,
         XL = 8,
         XXL = 16
     };
-    
+
     struct Ingredrients {
         std::uint32_t dough;
         std::uint32_t tomato;
@@ -42,9 +42,52 @@ namespace plz {
             virtual ~IPizza() = default;
             virtual plz::PizzaSize getSize() const = 0;
             virtual plz::PizzaType getType() const = 0;
-            virtual const plz::Ingredrients getIngredients() const = 0;
+            virtual const plz::Ingredrients& getIngredients() const = 0;
+            virtual std::uint32_t getBakingTime() const = 0;
+
+            virtual void setSize(PizzaSize size) = 0;
+            virtual void setType(PizzaType type) = 0;
+            virtual void setIngredients(plz::Ingredrients& ingredients) = 0;
+            virtual void setBakingTime(std::uint32_t time) = 0;
 
         protected:
         private:
     };
+}
+
+plz::Packet& operator<<(plz::Packet& packet, const plz::Ingredrients& ingredients)
+{
+    packet << ingredients.chiefLove;
+    packet << ingredients.dough;
+    packet << ingredients.eggplant;
+    packet << ingredients.goatCheese;
+    packet << ingredients.gruyere;
+    packet << ingredients.ham;
+    packet << ingredients.mushrooms;
+    packet << ingredients.steak;
+    packet << ingredients.tomato;
+    return packet;
+}
+
+plz::Packet& operator>>(plz::Packet& packet, plz::Ingredrients& ingredients)
+{
+    packet >> ingredients.chiefLove;
+    packet >> ingredients.dough;
+    packet >> ingredients.eggplant;
+    packet >> ingredients.goatCheese;
+    packet >> ingredients.gruyere;
+    packet >> ingredients.ham;
+    packet >> ingredients.mushrooms;
+    packet >> ingredients.steak;
+    packet >> ingredients.tomato;
+    return packet;
+}
+
+plz::Packet& operator<<(plz::Packet& packet, const plz::IPizza& pizza)
+{
+    packet << pizza.getType();
+    packet << pizza.getSize();
+    packet << pizza.getBakingTime();
+    packet << pizza.getIngredients();
+    return packet;
 }

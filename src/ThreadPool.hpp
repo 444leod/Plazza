@@ -15,16 +15,16 @@
 
 class ThreadPool {
     public:
-        ThreadPool(std::uint32_t _numThreads);
+        ThreadPool(std::uint32_t numThreads);
         ~ThreadPool();
-        void Start();
-        void QueueJob(const std::function<void()>& job);
-        void Stop();
-        bool Busy();
-        std::uint32_t OccupiedThreads() const;
+        void start();
+        void queueJob(const std::function<void()>& job);
+        void stop();
+        bool busy();
+        std::uint32_t occupiedThreads() const;
 
     private:
-        void ThreadLoop();
+        void threadLoop();
 
         std::uint32_t _numThreads;
         std::uint32_t _numOccupiedThreads = 0;

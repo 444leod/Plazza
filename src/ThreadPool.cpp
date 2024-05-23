@@ -21,15 +21,15 @@ ThreadPool::ThreadPool(std::uint32_t num_threads)
 */
 ThreadPool::~ThreadPool()
 {
-    Stop();
+    stop();
 }
 
 /*
- * @brief Start all threads in the pool and give them basic the ThreadLoop
+ * @brief Start all threads in the pool and give them basic the threadLoop
 */
-void ThreadPool::Start() {
+void ThreadPool::start() {
     for (uint32_t i = 0; i < this->_numThreads; ++i) {
-        this->_threads.emplace_back(std::thread(&ThreadPool::ThreadLoop, this));
+        this->_threads.emplace_back(std::thread(&ThreadPool::threadLoop, this));
     }
 }
 
@@ -37,7 +37,7 @@ void ThreadPool::Start() {
  * @brief Queue a job to be executed by the thread pool
  * @param job The job to be executed
 */
-void ThreadPool::QueueJob(const std::function<void()>& job) {
+void ThreadPool::queueJob(const std::function<void()>& job) {
     {
         std::unique_lock<std::mutex> lock(this->_queueMutex);
         this->_jobs.push(job);
@@ -49,7 +49,7 @@ void ThreadPool::QueueJob(const std::function<void()>& job) {
  * @brief Check if the thread pool is busy
  * @return true if the thread pool is busy else false
 */
-bool ThreadPool::Busy() {
+bool ThreadPool::busy() {
     bool poolbusy;
     {
         std::unique_lock<std::mutex> lock(this->_queueMutex);
@@ -62,7 +62,7 @@ bool ThreadPool::Busy() {
  * @brief Stop all threads in the pool by joining them
  * @detail This function will block until all threads are joined, meaning that they wait for all jobs to finish
 */
-void ThreadPool::Stop() {
+void ThreadPool::stop() {
     {
         std::unique_lock<std::mutex> lock(this->_queueMutex);
         this->_shouldTerminate = true;
@@ -78,15 +78,14 @@ void ThreadPool::Stop() {
  * @brief Get the number of threads that are currently occupied
  * @return The number of threads that are currently occupied
 */
-std::uint32_t ThreadPool::OccupiedThreads() const {
-
+std::uint32_t ThreadPool::occupiedThreads() const {
     return this->_numOccupiedThreads;
 }
 
 /*
  * @brief The main loop for the threads in the pool
 */
-void ThreadPool::ThreadLoop() {
+void ThreadPool::threadLoop() {
     while (1) {
         std::function<void()> job;
         {

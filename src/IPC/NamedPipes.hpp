@@ -58,6 +58,8 @@ namespace plz {
 
            bool is_open() const { return this->_is_open; }
 
+           bool empty() const;
+
             /**
              * @brief Set operator for NamedPipes.
              *

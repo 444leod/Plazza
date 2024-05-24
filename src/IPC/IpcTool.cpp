@@ -23,7 +23,7 @@ plz::IpcTool::IpcTool(const std::string& channel, ProcessSide side) :
     }
 }
 
-ssize_t plz::IpcTool::send(const Packet& packet)
+ssize_t plz::IpcTool::send(const plz::Packet& packet)
 {
     return this->_writePipe.send(packet.raw(), packet.size());
 }
@@ -35,7 +35,7 @@ ssize_t plz::IpcTool::send(const void *buf, size_t size)
 
 plz::Packet plz::IpcTool::receive()
 {
-    Packet packet;
+    plz::Packet packet;
     unsigned char byte = 0;
 
     while (this->_readPipe.receive(&byte, 1) > 0)

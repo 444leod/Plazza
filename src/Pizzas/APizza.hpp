@@ -5,10 +5,10 @@
 ** APizza
 */
 
-#include "IPizza.hpp"
-#include "Ingredients.hpp"
-
 #pragma once
+
+#include "IPizza.hpp"
+#include "Packet.hpp"
 
 namespace plz {
     class APizza: public IPizza {
@@ -20,13 +20,18 @@ namespace plz {
                 _bakingTime(bakingTime) {};
             virtual plz::PizzaSize getSize() const { return _size; };
             virtual plz::PizzaType getType() const { return _type; };
-            virtual const plz::Ingredients getIngredients() const { return _ingredients; };
+            virtual const plz::Ingredrients& getIngredients() const { return _ingredients; };
             virtual std::uint32_t getBakingTime() const { return _bakingTime; };
 
+            virtual void setSize(PizzaSize size) { this->_size = size; }
+            virtual void setType(PizzaType type) { this->_type = type; }
+            virtual void setIngredients(plz::Ingredrients& ingredients) { this->_ingredients = ingredients; }
+            virtual void setBakingTime(std::uint32_t time) { this->_bakingTime = time; }
+
         protected:
-            const plz::PizzaSize _size;
-            const plz::PizzaType _type;
-            const plz::Ingredients _ingredients;
-            const std::uint32_t _bakingTime;
+            plz::PizzaSize _size;
+            plz::PizzaType _type;
+            plz::Ingredrients _ingredients;
+            std::uint32_t _bakingTime;
     };
 }

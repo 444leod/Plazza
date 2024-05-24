@@ -60,6 +60,12 @@ plz::Packet& plz::Packet::operator<<(std::uint32_t data)
     return *this;
 }
 
+plz::Packet& plz::Packet::operator<<(int64_t data)
+{
+    this->append(&data, sizeof(data));
+    return *this;
+}
+
 plz::Packet& plz::Packet::operator<<(std::size_t data)
 {
     this->append(&data, sizeof(data));
@@ -108,6 +114,15 @@ plz::Packet& plz::Packet::operator>>(int& data)
 }
 
 plz::Packet& plz::Packet::operator>>(std::uint32_t& data)
+{
+    if (!this->_checkSize(sizeof(data)))
+        return *this;
+    std::memcpy(&data, &(this->_data[this->_pos]), sizeof(data));
+    this->_pos += sizeof(data);
+    return *this;
+}
+
+plz::Packet& plz::Packet::operator>>(int64_t& data)
 {
     if (!this->_checkSize(sizeof(data)))
         return *this;

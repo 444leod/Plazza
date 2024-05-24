@@ -12,7 +12,11 @@
 #include <vector>
 #include <cstdint>
 
+// #include "Kitchen.hpp"
+
 namespace plz {
+
+    struct KitchenDatas;
 
     class Packet
     {
@@ -54,17 +58,21 @@ namespace plz {
             Packet& operator<<(std::uint8_t data);
             Packet& operator<<(int data);
             Packet& operator<<(std::uint32_t data);
+            Packet& operator<<(int64_t data);
             Packet& operator<<(std::size_t data);
             Packet& operator<<(const char *data);
             Packet& operator<<(const std::string& data);
+            // Packet& operator<<(const plz::KitchenDatas& data);
 
             Packet& operator>>(bool& data);
             Packet& operator>>(char& data);
             Packet& operator>>(int& data);
             Packet& operator>>(std::uint32_t& data);
+            Packet& operator>>(int64_t& data);
             Packet& operator>>(std::size_t& data);
             Packet& operator>>(char *data);
             Packet& operator>>(std::string& data);
+            // Packet& operator>>(KitchenDatas& data);
 
         protected:
         private:

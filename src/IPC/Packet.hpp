@@ -16,8 +16,6 @@
 
 namespace plz {
 
-    struct KitchenDatas;
-
     class Packet
     {
         public:
@@ -81,17 +79,6 @@ namespace plz {
             std::size_t _size = 0;
             std::vector<std::byte> _data = {};
             bool _fail = false;
-    };
-
-    class IPacketable
-    {
-        public:
-            ~IPacketable() = default;
-
-            virtual Packet pack() const = 0;
-            virtual void unpack(const Packet& packer) = 0;
-        protected:
-        private:
     };
 
 }

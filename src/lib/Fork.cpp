@@ -21,9 +21,11 @@ plz::Fork::Fork()
     if (pid == 0) {
         _parentPid = parentPid;
         _childPid = getpid();
-    } else {
+    } else if (pid > 0) {
         _parentPid = parentPid;
         _childPid = pid;
+    } else {
+        throw ForkException("fork() failed");
     }
 }
 

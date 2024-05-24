@@ -86,10 +86,10 @@ inline plz::Packet& operator>>(plz::Packet& packet, plz::Ingredrients& ingredien
 
 inline plz::Packet& operator<<(plz::Packet& packet, const plz::IPizza& pizza)
 {
-    packet << pizza.getType();
     packet << pizza.getSize();
-    packet << pizza.getBakingTime();
+    packet << pizza.getType();
     packet << pizza.getIngredients();
+    packet << pizza.getBakingTime();
     return packet;
 }
 

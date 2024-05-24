@@ -24,7 +24,10 @@ const void *plz::Packet::raw() const
 
 bool plz::Packet::_checkSize(std::size_t size)
 {
-    return (this->_pos + size <= this->_size);
+    if (this->_pos + size <= this->_size)
+        return true;
+    this->_fail = true;
+    return false;
 }
 
 plz::Packet& plz::Packet::operator<<(bool data)
@@ -125,11 +128,12 @@ plz::Packet& plz::Packet::operator>>(std::size_t& data)
 plz::Packet& plz::Packet::operator>>(char *data)
 {
     std::size_t len = 0;
-    if (!this->_checkSize(sizeof(len)))
+    if (!this->_checkSize(sizeof(data)))
         return *this;
     *this >> len;
-    if (!this->_checkSize(len))
+    if (!this->_checkSize(sizeof(data))) {
         return *this;
+    }
     std::memcpy(data, &(this->_data[this->_pos]), len);
     this->_pos += len;
     return *this;
@@ -139,10 +143,10 @@ plz::Packet& plz::Packet::operator>>(std::string& data)
 {
     std::size_t len = 0;
 
-    if (!this->_checkSize(sizeof(len)))
+    if (!this->_checkSize(sizeof(data)))
         return *this;
     *this >> len;
-    if (!this->_checkSize(len))
+    if (!this->_checkSize(sizeof(data)))
         return *this;
     for (std::size_t i = 0; i < len; i++) {
         char c;

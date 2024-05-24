@@ -44,6 +44,10 @@ namespace plz {
              * @warning Does NOT account for read bytes.
             */
             const void *raw() const;
+            /**
+             * @brief Tells if a packet operation failed.
+            */
+           bool fail() const { return this->_fail; }
 
             Packet& operator<<(bool data);
             Packet& operator<<(char data);
@@ -68,6 +72,7 @@ namespace plz {
             std::uint32_t _pos = 0;
             std::size_t _size = 0;
             std::vector<std::byte> _data = {};
+            bool _fail = false;
     };
 
     class IPacketable

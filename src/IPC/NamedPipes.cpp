@@ -6,6 +6,8 @@
 */
 
 #include "NamedPipes.hpp"
+#include "errno.h"
+#include <string.h>
 
 plz::NamedPipes::NamedPipes(const std::string& path) : _path(path)
 {
@@ -49,8 +51,25 @@ ssize_t plz::NamedPipes::receive(void *buf, size_t size)
 
     if (!this->_is_open)
         throw std::runtime_error("NamedPipe not open.");
-
+    if (this->empty())
+        return 0;
     if ((s = ::read(this->_fd, buf, size)) < 0)
         throw std::runtime_error("Could not read properly.");
     return s;
+}
+
+bool plz::NamedPipes::empty() const
+{
+    fd_set readfds;
+    struct timeval tv;
+    tv.tv_sec = 0;
+    tv.tv_usec = 0;
+    FD_ZERO(&readfds);
+    FD_SET(this->_fd, &readfds);
+
+    if (select(this->_fd + 1, &readfds, NULL, NULL, &tv) < 0) {
+        std::cout << "select failed (" << strerror(errno) << ")" << std::endl;
+        throw std::runtime_error("Select failed.");
+    }
+    return !FD_ISSET(this->_fd, &readfds);
 }

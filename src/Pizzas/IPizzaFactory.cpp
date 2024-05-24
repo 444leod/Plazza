@@ -6,8 +6,6 @@
 */
 
 #include "IPizzaFactory.hpp"
-#include "macros.hpp"
-#include <iostream>
 
 void plz::IPizzaFactory::tryCreateIPizzas(std::string command, std::vector<std::shared_ptr<IPizza>>& pizzas)
 {

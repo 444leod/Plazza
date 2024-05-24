@@ -5,25 +5,29 @@
 ** APizzaFactory
 */
 
+#pragma once
+
 #include "IPizza.hpp"
 #include "Margarita.hpp"
 #include "Regina.hpp"
 #include "Americana.hpp"
 #include "Fantasia.hpp"
+#include "macros.hpp"
 
+#include <iostream>
 #include <memory>
 #include <map>
 #include <vector>
 #include <functional>
 #include <sstream>
 
-#pragma once
 
 namespace plz {
     class IPizzaFactory {
         public:
             IPizzaFactory(double multiplier) : _multiplier(multiplier) {};
             ~IPizzaFactory() = default;
+            void createPizza(PizzaType type, PizzaSize size);
             void tryCreateIPizzas(std::string command, std::vector<std::shared_ptr<IPizza>>& pizzas);
 
             class IPizzaFactoryException : public std::exception {

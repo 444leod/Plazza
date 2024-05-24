@@ -50,7 +50,7 @@ namespace plz {
             /**
              * @brief Sends a packet
             */
-            ssize_t send(const Packet& packet);
+            ssize_t send(const plz::Packet& packet);
 
             /**
              * @brief Sends a buffer through Named Pipes.
@@ -64,7 +64,7 @@ namespace plz {
             /**
              * @brief Reads a packet
             */
-            Packet receive();
+            plz::Packet receive();
 
             /**
              * @brief Reads from a Named Pipe into a buffer of a given size.
@@ -73,6 +73,8 @@ namespace plz {
              * @param size The amount of data to read in bytes.
             */
             ssize_t receive(void *buf, size_t size);
+
+            bool empty() const { return this->_readPipe.empty(); }
 
         protected:
         private:

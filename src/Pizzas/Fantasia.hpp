@@ -5,9 +5,9 @@
 ** Fantasia
 */
 
-#include "APizza.hpp"
-
 #pragma once
+
+#include "APizza.hpp"
 
 namespace plz {
     namespace Pizza {

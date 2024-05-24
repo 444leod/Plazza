@@ -7,6 +7,7 @@
 
 #pragma once
 
+#include "Packet.hpp"
 #include <cstdint>
 
 namespace plz {
@@ -55,7 +56,7 @@ namespace plz {
     };
 }
 
-plz::Packet& operator<<(plz::Packet& packet, const plz::Ingredrients& ingredients)
+inline plz::Packet& operator<<(plz::Packet& packet, const plz::Ingredrients& ingredients)
 {
     packet << ingredients.chiefLove;
     packet << ingredients.dough;
@@ -69,7 +70,7 @@ plz::Packet& operator<<(plz::Packet& packet, const plz::Ingredrients& ingredient
     return packet;
 }
 
-plz::Packet& operator>>(plz::Packet& packet, plz::Ingredrients& ingredients)
+inline plz::Packet& operator>>(plz::Packet& packet, plz::Ingredrients& ingredients)
 {
     packet >> ingredients.chiefLove;
     packet >> ingredients.dough;
@@ -83,11 +84,25 @@ plz::Packet& operator>>(plz::Packet& packet, plz::Ingredrients& ingredients)
     return packet;
 }
 
-plz::Packet& operator<<(plz::Packet& packet, const plz::IPizza& pizza)
+inline plz::Packet& operator<<(plz::Packet& packet, const plz::IPizza& pizza)
 {
     packet << pizza.getType();
     packet << pizza.getSize();
     packet << pizza.getBakingTime();
     packet << pizza.getIngredients();
+    return packet;
+}
+
+inline plz::Packet& operator>>(plz::Packet& packet, plz::IPizza& pizza)
+{
+    uint32_t s = pizza.getSize();
+    uint32_t t = pizza.getType();
+    auto i = pizza.getIngredients();
+    auto b = pizza.getBakingTime();
+    packet >> s >> t >> i >> b;
+    pizza.setSize(static_cast<plz::PizzaSize>(s));
+    pizza.setType(static_cast<plz::PizzaType>(t));
+    pizza.setIngredients(i);
+    pizza.setBakingTime(b);
     return packet;
 }

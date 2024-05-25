@@ -151,18 +151,16 @@ void plz::Kitchen::_spreadPizzas()
 {
     if (_pizzas.size() == 0)
         return;
-    if (_threadPool->occupiedThreads() == _pizzaiolosNumber)
+    if (_threadPool->occupiedThreads() >= _pizzaiolosNumber)
         return;
     auto pizza = _pizzas.front();
     auto pizzaIngredients = pizza->getIngredients();
-    // std::cout << "pizzaIngredients: " << pizzaIngredients << std::endl;
 
     if ((*_ingredients) < pizzaIngredients)
         return;
     *_ingredients = (*_ingredients) - pizzaIngredients;
     _pizzas.erase(_pizzas.begin());
     _threadPool->queueJob([this, pizza]() {
-        std::cout << "cooking time: " << pizza->getBakingTime() << std::endl;
         std::chrono::seconds time = std::chrono::seconds(pizza->getBakingTime());
         std::this_thread::sleep_for(time);
         plz::Packet packet;
@@ -176,6 +174,7 @@ void plz::Kitchen::_spreadPizzas()
         _lastActivity = std::chrono::system_clock::now();
         _activityMutex.unlock();
     });
+    std::this_thread::sleep_for(std::chrono::milliseconds(10));
 }
 
 void plz::Kitchen::_queueReceivedPacket()
@@ -215,11 +214,14 @@ void plz::Kitchen::_sendStatus()
 {
     plz::Packet packet;
 
+    uint32_t storage = _pizzas.size();
+
     packet << "status";
     packet << _threadPool->occupiedThreads();
-    packet << _pizzas.size();
-    std::cout << "chieflove sending: " << _ingredients->chiefLove << std::endl;
+    packet << storage;
     packet << *_ingredients;
+    std::printf("[KITCHEN %03d] send its status\n", _id);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
     _ipcTool->send(packet);
 }
 

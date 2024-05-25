@@ -36,28 +36,28 @@ bool plz::Reception::_queuePizza(std::shared_ptr<plz::IPizza> pizza)
     });
 
     for (auto& kitchen : kitchenByIdleTime) {
-        if (_kitchensStatus[kitchen].pizzaiolos == kitchen->pizzaiolos() && _kitchensStatus[kitchen].storage == kitchen->pizzaiolos() && _kitchensStatus[kitchen].ingredients >= pizza->getIngredients()) {
+        if (_kitchensStatus[kitchen].pizzaiolos == 0 && _kitchensStatus[kitchen].storage == 0 && _kitchensStatus[kitchen].ingredients >= pizza->getIngredients()) {
             kitchen->queuePizza(pizza);
 
-            _kitchensStatus[kitchen].pizzaiolos--;
+            _kitchensStatus[kitchen].pizzaiolos++;
             _kitchensStatus[kitchen].ingredients -= pizza->getIngredients();
             return true;
         }
     }
     for (auto& kitchen : _kitchens) {
-        if (_kitchensStatus[kitchen].pizzaiolos > 0 && _kitchensStatus[kitchen].ingredients >= pizza->getIngredients()) {
+        if (_kitchensStatus[kitchen].pizzaiolos < kitchen->pizzaiolos() && _kitchensStatus[kitchen].ingredients >= pizza->getIngredients()) {
             kitchen->queuePizza(pizza);
 
-            _kitchensStatus[kitchen].pizzaiolos--;
+            _kitchensStatus[kitchen].pizzaiolos++;
             _kitchensStatus[kitchen].ingredients -= pizza->getIngredients();
             return true;
         }
     }
     for (auto& kitchen : _kitchens) {
-        if (_kitchensStatus[kitchen].storage > 0 && _kitchensStatus[kitchen].ingredients >= pizza->getIngredients()) {
+        if (_kitchensStatus[kitchen].storage < kitchen->pizzaiolos()  && _kitchensStatus[kitchen].ingredients >= pizza->getIngredients()) {
             kitchen->queuePizza(pizza);
 
-            _kitchensStatus[kitchen].storage--;
+            _kitchensStatus[kitchen].storage++;
             _kitchensStatus[kitchen].ingredients -= pizza->getIngredients();
             return true;
         }
@@ -131,6 +131,7 @@ std::shared_ptr<plz::Kitchen> plz::Reception::_addKitchen()
     kitchen->setPid(fork->getChildPid());
     kitchen->initPipe(plz::ProcessSide::Parent);
     kitchen->waitFork();
+    std::cout << "Welcome to pizzeria number " << kitchen->id() << std::endl;
     std::vector<std::shared_ptr<plz::Packet>> packets = kitchen->getWaitingPackets();
     for (auto &packet : packets) {
         _kitchenPackets.push_back(std::make_pair(
@@ -162,6 +163,7 @@ void plz::Reception::handlePackets()
 
     for (auto &kitchenPacket : _kitchenPackets) {
         (*kitchenPacket.second) >> packetStr;
+        std::cout << "Kitchen " << kitchenPacket.first->id() << " received: " << packetStr << std::endl;
         if (_displayFunctions.contains(packetStr)) {
             _displayFunctions[packetStr](kitchenPacket.first, kitchenPacket.second);
         } else {
@@ -181,11 +183,10 @@ void plz::Reception::sendPacket(plz::Packet& packet)
 void plz::Reception::_displayStatus(std::shared_ptr<plz::Kitchen> kitchen, std::shared_ptr<plz::Packet> packet)
 {
     plz::KitchenDatas datas;
+    datas.ingredients = plz::Ingredients(0);
     (*packet) >> datas.pizzaiolos;
     (*packet) >> datas.storage;
     (*packet) >> datas.ingredients;
-
-    std::cout << "chieflove: " << datas.ingredients.chiefLove << std::endl;
 
     _kitchensStatus[kitchen] = datas;
     plz::Ingredients ingredients = datas.ingredients;

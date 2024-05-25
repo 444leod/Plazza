@@ -11,15 +11,17 @@
 #include "Pizzaiolo.hpp"
 #include "Ingredients.hpp"
 #include "Fork.hpp"
+#include "IpcTool.hpp"
+#include "Packet.hpp"
 
 #include <cstdint>
 #include <string>
 #include <memory>
 #include <vector>
 #include <chrono>
+#include <optional>
 
 namespace plz {
-
     struct KitchenDatas {
         uint32_t pizzaiolos;
         uint32_t restock;
@@ -34,15 +36,13 @@ namespace plz {
             ~Kitchen();
             void setPid(int pid) { _pid = pid; }
 
-            enum SIDE {
-                RECEPTION,
-                KITCHEN
-            };
-            void initPipe(Kitchen::SIDE);
+            void initPipe(plz::ProcessSide side);
             uint32_t pizzaiolos() { return _pizzaiolosNumber; }
             uint32_t restock() { return _restock; }
             uint32_t id() { return _id; }
             void setFork(std::shared_ptr<plz::Fork> fork) { _fork = fork; }
+            std::optional<plz::Packet> getPacket();
+            void sendPacket(plz::Packet& packet);
 
 
         private:
@@ -50,18 +50,17 @@ namespace plz {
             static uint32_t _nextId;
             uint32_t _id = 0;
             std::shared_ptr<plz::Fork> _fork;
+            std::shared_ptr<plz::IpcTool> _ipcTool;
+            std::vector<std::shared_ptr<plz::Packet>> _packetsQueue = {};
+            plz::ProcessSide _kitchenSide;
 
         // Reception side
         public:
-            const plz::Ingredients getIngredients();
             void queuePizza(std::shared_ptr<plz::IPizza> pizza);
-            bool isBusy();
             void close();
-            uint32_t nbOfAvailablePizzaiolos();
-            uint32_t nbOfAvailableStorage();
-            std::chrono::milliseconds idleTime();
             void waitFork();
             bool _readForkInit();
+            std::vector<std::shared_ptr<plz::Packet>>& getWaitingPackets();
 
         private:
             std::string _fetch();
@@ -72,15 +71,11 @@ namespace plz {
             void run();
 
         private:
-            void _readCommand();
+            void _queueReceivedPacket();
+            void _handlePackets();
             void _restockIngredients();
             void _pizzaioloPizzas();
-            void _sendBusy();
-            void _sendIdle();
-            void _sendIngredients();
-            void _sendNumberAvailablePizzaiolos();
-            void _sendNumberAvailableStorage();
-            void _send(std::string message);
+            void _sendStatus();
 
             uint32_t _pizzaiolosNumber = 0;
             uint32_t _restock = 0;
@@ -89,7 +84,9 @@ namespace plz {
             std::vector<std::shared_ptr<plz::IPizza>> _pizzas = {};
             std::shared_ptr<plz::Ingredients> _ingredients = std::make_shared<plz::Ingredients>(5, 5, 5, 5, 5, 5, 5, 5 ,5);
             std::chrono::time_point<std::chrono::system_clock> _lastActivity;
+            std::chrono::time_point<std::chrono::system_clock> _lastRestock;
             std::vector<std::shared_ptr<plz::Pizzaiolo>> _pizzaiolos = {};
+            bool _running = true;
     };
 }
 

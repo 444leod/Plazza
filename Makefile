@@ -8,24 +8,24 @@
 NAME = plazza
 
 SRC =	src/main.cpp \
-		src/IPC/Packet.cpp \
-		src/IPC/NamedPipes.cpp \
-		src/IPC/IpcTool.cpp \
 		src/Setup.cpp \
 		src/Runner.cpp \
 		src/Kitchen.cpp \
 		src/Reception.cpp \
 		src/Pizzaiolo.cpp \
 		src/Pizzas/IPizzaFactory.cpp \
-		./src/Pizzas/Ingredients.cpp \
-		./src/lib/Fork.cpp \
+		src/Pizzas/Ingredients.cpp \
+		src/lib/Fork.cpp \
+		src/IPC/Packet.cpp \
+		src/IPC/NamedPipes.cpp \
+		src/IPC/IpcTool.cpp \
 
 OBJ = $(SRC:.cpp=.o)
 
 CC = g++
 
 CXXFLAGS	+=	-Wall -Wextra -Werror -Wpedantic -std=c++20
-CXXFLAGS 	+=	-I./include -I./src/Pizzas -I./src/IPC
+CXXFLAGS 	+=	-I./include -I./src -I./src/Pizzas -I./src/IPC -I./src/lib
 
 all:	$(NAME)
 

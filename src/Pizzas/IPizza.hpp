@@ -8,6 +8,7 @@
 #pragma once
 
 #include "Packet.hpp"
+#include "Ingredients.hpp"
 #include <cstdint>
 
 namespace plz {
@@ -26,29 +27,17 @@ namespace plz {
         XXL = 16
     };
 
-    struct Ingredrients {
-        std::uint32_t dough;
-        std::uint32_t tomato;
-        std::uint32_t gruyere;
-        std::uint32_t ham;
-        std::uint32_t mushrooms;
-        std::uint32_t steak;
-        std::uint32_t eggplant;
-        std::uint32_t goatCheese;
-        std::uint32_t chiefLove;
-    };
-
     class IPizza {
         public:
             virtual ~IPizza() = default;
             virtual plz::PizzaSize getSize() const = 0;
             virtual plz::PizzaType getType() const = 0;
-            virtual const plz::Ingredrients& getIngredients() const = 0;
+            virtual const plz::Ingredients& getIngredients() const = 0;
             virtual std::uint32_t getBakingTime() const = 0;
 
             virtual void setSize(PizzaSize size) = 0;
             virtual void setType(PizzaType type) = 0;
-            virtual void setIngredients(plz::Ingredrients& ingredients) = 0;
+            virtual void setIngredients(plz::Ingredients& ingredients) = 0;
             virtual void setBakingTime(std::uint32_t time) = 0;
 
         protected:
@@ -56,7 +45,7 @@ namespace plz {
     };
 }
 
-inline plz::Packet& operator<<(plz::Packet& packet, const plz::Ingredrients& ingredients)
+inline plz::Packet& operator<<(plz::Packet& packet, const plz::Ingredients& ingredients)
 {
     packet << ingredients.chiefLove;
     packet << ingredients.dough;
@@ -70,7 +59,7 @@ inline plz::Packet& operator<<(plz::Packet& packet, const plz::Ingredrients& ing
     return packet;
 }
 
-inline plz::Packet& operator>>(plz::Packet& packet, plz::Ingredrients& ingredients)
+inline plz::Packet& operator>>(plz::Packet& packet, plz::Ingredients& ingredients)
 {
     packet >> ingredients.chiefLove;
     packet >> ingredients.dough;

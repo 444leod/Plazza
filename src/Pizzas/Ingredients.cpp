@@ -14,6 +14,10 @@ plz::Ingredients::~Ingredients()
 {
 }
 
+plz::Ingredients::Ingredients(uint32_t quantity) : dough(quantity), tomato(quantity), gruyere(quantity), ham(quantity), mushrooms(quantity), steak(quantity), eggplant(quantity), goatCheese(quantity), chiefLove(quantity)
+{
+}
+
 plz::Ingredients::Ingredients(uint32_t dough, uint32_t tomato, uint32_t gruyere, uint32_t ham, uint32_t mushrooms, uint32_t steak, uint32_t eggplant, uint32_t goatCheese, uint32_t chiefLove) : dough(dough), tomato(tomato), gruyere(gruyere), ham(ham), mushrooms(mushrooms), steak(steak), eggplant(eggplant), goatCheese(goatCheese), chiefLove(chiefLove)
 {
 }

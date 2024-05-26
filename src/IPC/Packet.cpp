@@ -60,11 +60,11 @@ plz::Packet& plz::Packet::operator<<(std::uint32_t data)
     return *this;
 }
 
-plz::Packet& plz::Packet::operator<<(int64_t data)
-{
-    this->append(&data, sizeof(data));
-    return *this;
-}
+// plz::Packet& plz::Packet::operator<<(int64_t data)
+// {
+//     this->append(&data, sizeof(data));
+//     return *this;
+// }
 
 plz::Packet& plz::Packet::operator<<(std::size_t data)
 {
@@ -122,14 +122,14 @@ plz::Packet& plz::Packet::operator>>(std::uint32_t& data)
     return *this;
 }
 
-plz::Packet& plz::Packet::operator>>(int64_t& data)
-{
-    if (!this->_checkSize(sizeof(data)))
-        return *this;
-    std::memcpy(&data, &(this->_data[this->_pos]), sizeof(data));
-    this->_pos += sizeof(data);
-    return *this;
-}
+// plz::Packet& plz::Packet::operator>>(int64_t& data)
+// {
+//     if (!this->_checkSize(sizeof(data)))
+//         return *this;
+//     std::memcpy(&data, &(this->_data[this->_pos]), sizeof(data));
+//     this->_pos += sizeof(data);
+//     return *this;
+// }
 
 plz::Packet& plz::Packet::operator>>(std::size_t& data)
 {
@@ -143,10 +143,10 @@ plz::Packet& plz::Packet::operator>>(std::size_t& data)
 plz::Packet& plz::Packet::operator>>(char *data)
 {
     std::size_t len = 0;
-    if (!this->_checkSize(sizeof(data)))
+    if (!this->_checkSize(sizeof(size_t)))
         return *this;
     *this >> len;
-    if (!this->_checkSize(sizeof(data))) {
+    if (!this->_checkSize(len)) {
         return *this;
     }
     std::memcpy(data, &(this->_data[this->_pos]), len);
@@ -158,10 +158,10 @@ plz::Packet& plz::Packet::operator>>(std::string& data)
 {
     std::size_t len = 0;
 
-    if (!this->_checkSize(sizeof(data)))
+    if (!this->_checkSize(sizeof(std::size_t)))
         return *this;
     *this >> len;
-    if (!this->_checkSize(sizeof(data)))
+    if (!this->_checkSize(len))
         return *this;
     for (std::size_t i = 0; i < len; i++) {
         char c;

@@ -56,7 +56,7 @@ namespace plz {
             Packet& operator<<(std::uint8_t data);
             Packet& operator<<(int data);
             Packet& operator<<(std::uint32_t data);
-            Packet& operator<<(int64_t data);
+            // Packet& operator<<(int64_t data);
             Packet& operator<<(std::size_t data);
             Packet& operator<<(const char *data);
             Packet& operator<<(const std::string& data);
@@ -66,7 +66,7 @@ namespace plz {
             Packet& operator>>(char& data);
             Packet& operator>>(int& data);
             Packet& operator>>(std::uint32_t& data);
-            Packet& operator>>(int64_t& data);
+            // Packet& operator>>(int64_t& data);
             Packet& operator>>(std::size_t& data);
             Packet& operator>>(char *data);
             Packet& operator>>(std::string& data);

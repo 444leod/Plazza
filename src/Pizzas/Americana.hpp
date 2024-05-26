@@ -15,17 +15,9 @@ namespace plz {
         class Americana : public APizza{
             public:
                 Americana(plz::PizzaSize size, double multiplier) :
-                    APizza(size, plz::PizzaType::Americana, {
-                        .dough = 1,
-                        .tomato = 1,
-                        .gruyere = 1,
-                        .ham = 0,
-                        .mushrooms = 0,
-                        .steak = 1,
-                        .eggplant = 0,
-                        .goatCheese = 0,
-                        .chiefLove = 0
-                    }, 2 * multiplier) {};
+                    APizza(size, plz::PizzaType::Americana, plz::Ingredients(1, 1, 1, 0, 0, 1, 0, 0, 0), 2 * multiplier) {};
         };
     }
 }
+
+

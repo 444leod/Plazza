@@ -42,12 +42,14 @@ namespace plz {
             std::shared_ptr<plz::Reception> _reception;
             bool _running = true;
 
-
             std::map<std::string, std::function<void(std::string)>> _commands = {
                 {"", [this](UNUSED std::string command) {}
                 },
                 {"status", [this](UNUSED std::string command) {
-                    this->_reception->displayKitchenStatus();
+                    plz::Packet packet;
+
+                    packet << "status";
+                    this->_reception->sendPacket(packet);
                 }},
                 {"exit", [this](UNUSED std::string command) {
                     this->_running = false;

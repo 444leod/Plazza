@@ -101,11 +101,11 @@ void plz::Reception::spreadPizzas()
 
 void plz::Reception::handleCommand(UNUSED std::string command)
 {
+    _factory.tryCreateIPizzas(command, _pizzas);
     _kitchensStatus.clear();
     plz::Packet packet;
     packet << "status";
     this->sendPacket(packet);
-    _factory.tryCreateIPizzas(command, _pizzas);
 }
 
 std::shared_ptr<plz::Kitchen> plz::Reception::_addKitchen()
@@ -150,6 +150,7 @@ void plz::Reception::receivePackets()
     for (auto &kitchen : _kitchens) {
         packet = kitchen->getPacket();
         if (packet.has_value()) {
+            std::cout << "received a packet" << std::endl;
             _kitchenPackets.push_back(std::make_pair(
                 kitchen,
                 std::make_shared<plz::Packet>(packet.value())
@@ -163,6 +164,7 @@ void plz::Reception::handlePackets()
     std::string packetStr;
 
     for (auto &kitchenPacket : _kitchenPackets) {
+        std::cout << "Handling packet" << std::endl;
         (*kitchenPacket.second) >> packetStr;
         if (_displayFunctions.contains(packetStr)) {
             _displayFunctions[packetStr](kitchenPacket.first, kitchenPacket.second);

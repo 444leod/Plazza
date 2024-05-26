@@ -32,6 +32,7 @@ namespace plz {
             bool _queuePizza(std::shared_ptr<plz::IPizza> pizza);
             void _displayPrint(std::shared_ptr<plz::Kitchen>, std::shared_ptr<plz::Packet> packet);
             void _displayStatus(std::shared_ptr<plz::Kitchen>, std::shared_ptr<plz::Packet> packet);
+            void _getStatus(std::shared_ptr<plz::Kitchen>, std::shared_ptr<plz::Packet> packet);
             void _displayClosing(std::shared_ptr<plz::Kitchen>, UNUSED std::shared_ptr<plz::Packet> packet);
             std::optional<plz::KitchenDatas> _getKitchenStatus(std::shared_ptr<plz::Kitchen> kitchen);
 
@@ -45,7 +46,8 @@ namespace plz {
             std::map<std::shared_ptr<plz::Kitchen>, plz::KitchenDatas> _kitchensStatus = {};
             std::map<std::string, std::function<void(std::shared_ptr<plz::Kitchen>, std::shared_ptr<plz::Packet>)>> _displayFunctions = {
                 {"print",   [this](std::shared_ptr<plz::Kitchen> kitchen, std::shared_ptr<plz::Packet> packet) { this->_displayPrint(kitchen, packet); }},
-                {"status",  [this](std::shared_ptr<plz::Kitchen> kitchen, std::shared_ptr<plz::Packet> packet) { this->_displayStatus(kitchen, packet); }},
+                {"displayStatus",  [this](std::shared_ptr<plz::Kitchen> kitchen, std::shared_ptr<plz::Packet> packet) { this->_displayStatus(kitchen, packet); }},
+                {"status",  [this](std::shared_ptr<plz::Kitchen> kitchen, std::shared_ptr<plz::Packet> packet) { this->_getStatus(kitchen, packet); }},
                 {"exit", [this](std::shared_ptr<plz::Kitchen> kitchen, std::shared_ptr<plz::Packet> packet) { this->_displayClosing(kitchen, packet); }},
                 {"error", [this](UNUSED std::shared_ptr<plz::Kitchen> kitchen, UNUSED std::shared_ptr<plz::Packet> packet) { throw std::runtime_error("Something went wrong in one of the kitchens."); }}
             };

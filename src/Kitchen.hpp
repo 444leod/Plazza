@@ -75,6 +75,7 @@ namespace plz {
             void _handlePackets();
             void _restockIngredients();
             void _pizzaioloPizzas();
+            void _sendDisplayStatus();
             void _sendStatus();
             void _verifyClosing();
             void _spreadPizzas();

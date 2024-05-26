@@ -163,13 +163,15 @@ void plz::Kitchen::_spreadPizzas()
     _threadPool->queueJob([this, pizza]() {
         std::chrono::seconds time = std::chrono::seconds(pizza->getBakingTime());
         std::this_thread::sleep_for(time);
+
         plz::Packet packet;
         packet << "print";
-        std::string str = "Cooked pizza " + std::to_string(static_cast<uint32_t>(pizza->getType())) + " " + std::to_string(static_cast<uint32_t>(pizza->getSize()));
+        std::string str = "a " + pizzaSizeToString[pizza->getSize()] + " " + pizzaTypeToString[pizza->getType()] + " is ready!";
         packet << str;
         _printMutex.lock();
         _ipcTool->send(packet);
         _printMutex.unlock();
+
         _activityMutex.lock();
         _lastActivity = std::chrono::system_clock::now();
         _activityMutex.unlock();
@@ -188,26 +190,29 @@ void plz::Kitchen::_queueReceivedPacket()
 
 void plz::Kitchen::_handlePackets()
 {
-    for (auto packet : _packetsQueue) {
-        while (packet->remains() > 0) {
-            std::string message;
-
-            *packet >> message;
-            if (message == "status") {
-                _sendStatus();
-            } else if (message == "order") {
-                if (_pizzas.size() > _pizzaiolosNumber)
-                    throw std::runtime_error("Too many pizzas in queue");
-                plz::APizza pizza(S, plz::PizzaType::Americana, plz::Ingredients(), 2);
-                *packet >> pizza;
-                _pizzas.push_back(std::make_shared<plz::APizza>(pizza));
-            } else if (message == "exit") {
-                _running = false;
-            } else {
-                throw std::runtime_error("Invalid message received (" + message + ")");
-            }
-        }
+    if (_packetsQueue.size() == 0)
+        return;
+    auto packet = _packetsQueue.front();
+    _packetsQueue.erase(_packetsQueue.begin());
+    std::string message;
+    *packet >> message;
+    if (message == "displayStatus") {
+        _sendDisplayStatus();
+    } else if (message == "status") {
+        _sendStatus();
+    } else if (message == "order") {
+        if (_pizzas.size() > _pizzaiolosNumber)
+            throw std::runtime_error("Too many pizzas in queue");
+        plz::APizza pizza(S, plz::PizzaType::Americana, plz::Ingredients(), 2);
+        *packet >> pizza;
+        _pizzas.push_back(std::make_shared<plz::APizza>(pizza));
+    } else if (message == "exit") {
+        _running = false;
+    } else {
+        throw std::runtime_error("Invalid message received (" + message + ")");
     }
+    if (packet->remains() > 0)
+        _packetsQueue.push_back(packet);
 }
 
 void plz::Kitchen::_sendStatus()
@@ -220,7 +225,20 @@ void plz::Kitchen::_sendStatus()
     packet << _threadPool->occupiedThreads();
     packet << storage;
     packet << *_ingredients;
-    std::printf("[KITCHEN %03d] send its status\n", _id);
+    std::this_thread::sleep_for(std::chrono::milliseconds(100));
+    _ipcTool->send(packet);
+}
+
+void plz::Kitchen::_sendDisplayStatus()
+{
+    plz::Packet packet;
+
+    uint32_t storage = _pizzas.size();
+
+    packet << "displayStatus";
+    packet << _threadPool->occupiedThreads();
+    packet << storage;
+    packet << *_ingredients;
     std::this_thread::sleep_for(std::chrono::milliseconds(100));
     _ipcTool->send(packet);
 }

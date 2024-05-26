@@ -48,7 +48,7 @@ namespace plz {
                 {"status", [this](UNUSED std::string command) {
                     plz::Packet packet;
 
-                    packet << "status";
+                    packet << "displayStatus";
                     this->_reception->sendPacket(packet);
                 }},
                 {"exit", [this](UNUSED std::string command) {

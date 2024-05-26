@@ -13,12 +13,13 @@ SRC =	src/main.cpp \
 		src/Kitchen.cpp \
 		src/Reception.cpp \
 		src/Pizzaiolo.cpp \
-		src/Pizzas/IPizzaFactory.cpp \
-		src/Pizzas/Ingredients.cpp \
-		src/lib/Fork.cpp \
+		src/ThreadPool.cpp \
 		src/IPC/Packet.cpp \
 		src/IPC/NamedPipes.cpp \
 		src/IPC/IpcTool.cpp \
+		src/Pizzas/IPizzaFactory.cpp \
+		src/Pizzas/Ingredients.cpp \
+		src/lib/Fork.cpp \
 
 OBJ = $(SRC:.cpp=.o)
 

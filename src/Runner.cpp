@@ -27,10 +27,8 @@ void plz::Runner::run()
         FD_ZERO(&readfds);
         FD_SET(0, &readfds);
 
-        // std::cout << "select!" << std::endl;
         select(1, &readfds, nullptr, nullptr, &tv);
         if (FD_ISSET(0, &readfds)) {
-            std::cout << "FD_ISSET" << std::endl;
             command = this->getCommand();
             if (!command.has_value()) {
                 std::cout << "Exiting" << std::endl;

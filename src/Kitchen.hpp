@@ -24,7 +24,7 @@
 namespace plz {
     struct KitchenDatas {
         uint32_t pizzaiolos;
-        uint32_t restock;
+        uint32_t storage;
         plz::Ingredients ingredients;
         std::chrono::milliseconds idleTime;
     };
@@ -32,13 +32,13 @@ namespace plz {
     class Kitchen {
         // Global
         public:
-            Kitchen(uint32_t pizzaiolos, uint32_t restock);
+            Kitchen(uint32_t pizzaiolos, uint32_t restockTime);
             ~Kitchen();
             void setPid(int pid) { _pid = pid; }
 
             void initPipe(plz::ProcessSide side);
             uint32_t pizzaiolos() { return _pizzaiolosNumber; }
-            uint32_t restock() { return _restock; }
+            uint32_t restockTime() { return _restockTime; }
             uint32_t id() { return _id; }
             void setFork(std::shared_ptr<plz::Fork> fork) { _fork = fork; }
             std::optional<plz::Packet> getPacket();
@@ -76,9 +76,10 @@ namespace plz {
             void _restockIngredients();
             void _pizzaioloPizzas();
             void _sendStatus();
+            void _verifyClosing();
 
             uint32_t _pizzaiolosNumber = 0;
-            uint32_t _restock = 0;
+            uint32_t _restockTime = 0;
             uint32_t _availablePizzaiolos = 0;
             uint32_t _availableStorage = 0;
             std::vector<std::shared_ptr<plz::IPizza>> _pizzas = {};

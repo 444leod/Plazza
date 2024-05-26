@@ -36,11 +36,10 @@ bool plz::Reception::_queuePizza(std::shared_ptr<plz::IPizza> pizza)
     });
 
     for (auto& kitchen : kitchenByIdleTime) {
-        if (_kitchensStatus[kitchen].pizzaiolos == kitchen->pizzaiolos() && _kitchensStatus[kitchen].restock == kitchen->restock() && _kitchensStatus[kitchen].ingredients >= pizza->getIngredients()) {
+        if (_kitchensStatus[kitchen].pizzaiolos == kitchen->pizzaiolos() && _kitchensStatus[kitchen].storage == kitchen->pizzaiolos() && _kitchensStatus[kitchen].ingredients >= pizza->getIngredients()) {
             kitchen->queuePizza(pizza);
 
             _kitchensStatus[kitchen].pizzaiolos--;
-            _kitchensStatus[kitchen].restock--;
             _kitchensStatus[kitchen].ingredients -= pizza->getIngredients();
             return true;
         }
@@ -55,10 +54,10 @@ bool plz::Reception::_queuePizza(std::shared_ptr<plz::IPizza> pizza)
         }
     }
     for (auto& kitchen : _kitchens) {
-        if (_kitchensStatus[kitchen].restock > 0 && _kitchensStatus[kitchen].ingredients >= pizza->getIngredients()) {
+        if (_kitchensStatus[kitchen].storage > 0 && _kitchensStatus[kitchen].ingredients >= pizza->getIngredients()) {
             kitchen->queuePizza(pizza);
 
-            _kitchensStatus[kitchen].restock--;
+            _kitchensStatus[kitchen].storage--;
             _kitchensStatus[kitchen].ingredients -= pizza->getIngredients();
             return true;
         }
@@ -88,7 +87,7 @@ void plz::Reception::spreadPizzas()
             kitchen->queuePizza(pizza);
             plz::KitchenDatas kitchenStatus = {
                 kitchen->pizzaiolos() - 1,
-                kitchen->restock(),
+                kitchen->pizzaiolos(),
                 plz::Ingredients(5) - pizza->getIngredients(),
                 std::chrono::milliseconds(0)
             };
@@ -102,6 +101,10 @@ void plz::Reception::spreadPizzas()
 
 void plz::Reception::handleCommand(UNUSED std::string command)
 {
+    _kitchensStatus.clear();
+    plz::Packet packet;
+    packet << "status";
+    this->sendPacket(packet);
     _factory.tryCreateIPizzas(command, _pizzas);
 }
 
@@ -129,7 +132,6 @@ std::shared_ptr<plz::Kitchen> plz::Reception::_addKitchen()
     }
     kitchen->setPid(fork->getChildPid());
     kitchen->initPipe(plz::ProcessSide::Parent);
-    std::cout << "[RECEPTION] Waiting for kitchen " << kitchen->id() << " to be ready..." << std::endl;
     kitchen->waitFork();
     std::vector<std::shared_ptr<plz::Packet>> packets = kitchen->getWaitingPackets();
     for (auto &packet : packets) {
@@ -138,7 +140,6 @@ std::shared_ptr<plz::Kitchen> plz::Reception::_addKitchen()
             packet
         ));
     }
-    std::cout << "[RECEPTION] Kitchen " << kitchen->id() << " is ready!" << std::endl;
     return kitchen;
 }
 
@@ -149,7 +150,6 @@ void plz::Reception::receivePackets()
     for (auto &kitchen : _kitchens) {
         packet = kitchen->getPacket();
         if (packet.has_value()) {
-            std::cout << "[RECEPTION] Received packet from kitchen " << kitchen->id() << std::endl;
             _kitchenPackets.push_back(std::make_pair(
                 kitchen,
                 std::make_shared<plz::Packet>(packet.value())
@@ -184,7 +184,7 @@ void plz::Reception::_displayStatus(std::shared_ptr<plz::Kitchen> kitchen, std::
 {
     plz::KitchenDatas datas;
     (*packet) >> datas.pizzaiolos;
-    (*packet) >> datas.restock;
+    (*packet) >> datas.storage;
     (*packet) >> datas.ingredients.dough;
     (*packet) >> datas.ingredients.tomato;
     (*packet) >> datas.ingredients.gruyere;
@@ -202,8 +202,8 @@ void plz::Reception::_displayStatus(std::shared_ptr<plz::Kitchen> kitchen, std::
     std::printf("│                                   │\n");
     std::printf("│            Pizzeria %.3d           │\n", kitchen->id());
     std::printf("│                                   │\n");
-    std::printf("│      Cooking pizzas: %3d/%-3d      │\n", datas.pizzaiolos - kitchen->pizzaiolos(), datas.restock);
-    std::printf("│     Storaged pizzas: %3d/%-3d      │\n", datas.restock - kitchen->restock(), datas.restock);
+    std::printf("│      Cooking pizzas: %3d/%-3d      │\n", datas.pizzaiolos - kitchen->pizzaiolos(), kitchen->pizzaiolos());
+    std::printf("│     Storaged pizzas: %3d/%-3d      │\n", datas.storage - kitchen->pizzaiolos(), kitchen->pizzaiolos());
     std::printf("│                                   │\n");
     std::printf("│           Ingredients:            │\n");
     std::printf("│                                   │\n");

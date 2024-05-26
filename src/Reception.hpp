@@ -46,7 +46,8 @@ namespace plz {
             std::map<std::string, std::function<void(std::shared_ptr<plz::Kitchen>, std::shared_ptr<plz::Packet>)>> _displayFunctions = {
                 {"print",   [this](std::shared_ptr<plz::Kitchen> kitchen, std::shared_ptr<plz::Packet> packet) { this->_displayPrint(kitchen, packet); }},
                 {"status",  [this](std::shared_ptr<plz::Kitchen> kitchen, std::shared_ptr<plz::Packet> packet) { this->_displayStatus(kitchen, packet); }},
-                {"closing", [this](std::shared_ptr<plz::Kitchen> kitchen, std::shared_ptr<plz::Packet> packet) { this->_displayClosing(kitchen, packet); }}
+                {"exit", [this](std::shared_ptr<plz::Kitchen> kitchen, std::shared_ptr<plz::Packet> packet) { this->_displayClosing(kitchen, packet); }},
+                {"error", [this](UNUSED std::shared_ptr<plz::Kitchen> kitchen, UNUSED std::shared_ptr<plz::Packet> packet) { throw std::runtime_error("Something went wrong in one of the kitchens."); }}
             };
     };
 }

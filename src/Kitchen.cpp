@@ -10,11 +10,11 @@
 
 // Global
 
-plz::Kitchen::Kitchen(uint32_t pizzaiolos, uint32_t restock) : _pizzaiolosNumber(pizzaiolos), _restock(restock)
+plz::Kitchen::Kitchen(uint32_t pizzaiolos, uint32_t restockTime) : _pizzaiolosNumber(pizzaiolos), _restockTime(restockTime)
 {
     _id = _nextId++;
     _availablePizzaiolos = pizzaiolos;
-    _availableStorage = restock;
+    _availableStorage = pizzaiolos;
 }
 
 plz::Kitchen::~Kitchen()
@@ -32,6 +32,7 @@ void plz::Kitchen::initPipe(plz::ProcessSide side)
         packet << "ready";
         _ipcTool->send(packet);
         std::cout << "[KITCHEN] Kitchen " << _id << " sent ready" << std::endl;
+        _lastActivity = std::chrono::system_clock::now();
     }
 }
 
@@ -39,17 +40,11 @@ std::optional<plz::Packet> plz::Kitchen::getPacket()
 {
     plz::Packet packet;
 
-    std::string type;
-    if (_kitchenSide == plz::ProcessSide::Child)
-        type = "[KITCHEN] ";
-    else
-        type = "[RECEPTION] ";
-
     if (_ipcTool->empty())
         return std::nullopt;
-    std::cout << type << "Kitchen " << _id << " receiving packet (the next line is a receive and is blockant)" << std::endl;
     packet = _ipcTool->receive();
-    std::cout << type << "Kitchen " << _id << " received packet! (after the blocking method)" << std::endl;
+    if (packet.fail())
+        throw std::runtime_error("Invalid packet received");
     if (packet.size() == 0)
         return std::nullopt;
     return packet;
@@ -86,6 +81,7 @@ void plz::Kitchen::close()
     packet << "exit";
     _ipcTool->send(packet);
     _running = false;
+    _fork->waitFork();
 }
 
 void plz::Kitchen::waitFork()
@@ -110,6 +106,8 @@ bool plz::Kitchen::_readForkInit()
         return false;
 
     packet = std::make_shared<plz::Packet>(_ipcTool->receive());
+    if (packet->fail())
+        throw std::runtime_error("Invalid packet received");
     if (packet->size() == 0)
         return false;
     *packet >> message;
@@ -139,9 +137,7 @@ void plz::Kitchen::run()
         _queueReceivedPacket();
         _restockIngredients();
         _handlePackets();
-        plz::Packet packet;
-        packet << "alive";
-        _ipcTool->send(packet);
+        _verifyClosing();
     }
 
     plz::Packet packet;
@@ -200,14 +196,21 @@ void plz::Kitchen::_sendStatus()
 
 void plz::Kitchen::_restockIngredients()
 {
-    std::chrono::system_clock::time_point now = std::chrono::system_clock::now();
-    std::chrono::duration<double> elapsed = now - _lastRestock;
+    auto now = std::chrono::system_clock::now();
+    auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(now - _lastRestock).count();
 
-    if (elapsed.count() > _restock) {
+    if (elapsed > _restockTime) {
         *_ingredients += plz::Ingredients(1, 1, 1, 1, 1, 1, 1, 1, 1);
         _lastRestock = now;
     }
-    plz::Packet packet;
-    packet << "print" << "Restocked ingredients";
-    _ipcTool->send(packet);
+}
+
+void plz::Kitchen::_verifyClosing()
+{
+    auto now = std::chrono::system_clock::now();
+
+    if (now - _lastActivity > std::chrono::milliseconds(5000)) {
+        std::cout << "VerifyClosing: " << _id << std::endl;
+        _running = false;
+    }
 }

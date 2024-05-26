@@ -7,6 +7,7 @@
 
 #include "Kitchen.hpp"
 #include "macros.hpp"
+#include "Regina.hpp"
 
 // Global
 
@@ -31,8 +32,9 @@ void plz::Kitchen::initPipe(plz::ProcessSide side)
         plz::Packet packet;
         packet << "ready";
         _ipcTool->send(packet);
-        std::cout << "[KITCHEN] Kitchen " << _id << " sent ready" << std::endl;
         _lastActivity = std::chrono::system_clock::now();
+        _threadPool = std::make_shared<ThreadPool>(_pizzaiolosNumber);
+        _threadPool->start();
     }
 }
 
@@ -60,14 +62,13 @@ void plz::Kitchen::sendPacket(plz::Packet& packet)
 // Reception side
 
 
-void plz::Kitchen::queuePizza(UNUSED std::shared_ptr<plz::IPizza> pizza)
+void plz::Kitchen::queuePizza(std::shared_ptr<plz::IPizza> pizza)
 {
-    if (_availablePizzaiolos > 0) {
-        _availablePizzaiolos--;
-        *_ingredients -= pizza->getIngredients();
-    } else if (_availableStorage > 0) {
-        _availableStorage--;
-    }
+    plz::Packet packet;
+
+    packet << "order";
+    packet << *pizza;
+    _ipcTool->send(packet);
 }
 
 std::string plz::Kitchen::_fetch()
@@ -137,12 +138,44 @@ void plz::Kitchen::run()
         _queueReceivedPacket();
         _restockIngredients();
         _handlePackets();
+        _spreadPizzas();
         _verifyClosing();
     }
 
     plz::Packet packet;
     packet << "exit";
     _ipcTool->send(packet);
+}
+
+void plz::Kitchen::_spreadPizzas()
+{
+    if (_pizzas.size() == 0)
+        return;
+    if (_threadPool->occupiedThreads() == _pizzaiolosNumber)
+        return;
+    auto pizza = _pizzas.front();
+    auto pizzaIngredients = pizza->getIngredients();
+    // std::cout << "pizzaIngredients: " << pizzaIngredients << std::endl;
+
+    if ((*_ingredients) < pizzaIngredients)
+        return;
+    *_ingredients = (*_ingredients) - pizzaIngredients;
+    _pizzas.erase(_pizzas.begin());
+    _threadPool->queueJob([this, pizza]() {
+        std::cout << "cooking time: " << pizza->getBakingTime() << std::endl;
+        std::chrono::seconds time = std::chrono::seconds(pizza->getBakingTime());
+        std::this_thread::sleep_for(time);
+        plz::Packet packet;
+        packet << "print";
+        std::string str = "Cooked pizza " + std::to_string(static_cast<uint32_t>(pizza->getType())) + " " + std::to_string(static_cast<uint32_t>(pizza->getSize()));
+        packet << str;
+        _printMutex.lock();
+        _ipcTool->send(packet);
+        _printMutex.unlock();
+        _activityMutex.lock();
+        _lastActivity = std::chrono::system_clock::now();
+        _activityMutex.unlock();
+    });
 }
 
 void plz::Kitchen::_queueReceivedPacket()
@@ -164,10 +197,13 @@ void plz::Kitchen::_handlePackets()
             if (message == "status") {
                 _sendStatus();
             } else if (message == "order") {
-
+                if (_pizzas.size() > _pizzaiolosNumber)
+                    throw std::runtime_error("Too many pizzas in queue");
+                plz::APizza pizza(S, plz::PizzaType::Americana, plz::Ingredients(), 2);
+                *packet >> pizza;
+                _pizzas.push_back(std::make_shared<plz::APizza>(pizza));
             } else if (message == "exit") {
                 _running = false;
-            } else if (message == "alive") {
             } else {
                 throw std::runtime_error("Invalid message received (" + message + ")");
             }
@@ -180,17 +216,10 @@ void plz::Kitchen::_sendStatus()
     plz::Packet packet;
 
     packet << "status";
-    packet << _availablePizzaiolos;
-    packet << _availableStorage;
-    packet << _ingredients->dough;
-    packet << _ingredients->tomato;
-    packet << _ingredients->gruyere;
-    packet << _ingredients->ham;
-    packet << _ingredients->mushrooms;
-    packet << _ingredients->steak;
-    packet << _ingredients->eggplant;
-    packet << _ingredients->goatCheese;
-    packet << _ingredients->chiefLove;
+    packet << _threadPool->occupiedThreads();
+    packet << _pizzas.size();
+    std::cout << "chieflove sending: " << _ingredients->chiefLove << std::endl;
+    packet << *_ingredients;
     _ipcTool->send(packet);
 }
 
@@ -207,10 +236,14 @@ void plz::Kitchen::_restockIngredients()
 
 void plz::Kitchen::_verifyClosing()
 {
+    if (_threadPool->occupiedThreads() != 0)
+        return;
     auto now = std::chrono::system_clock::now();
+    _activityMutex.lock();
+    auto lastActivity = _lastActivity;
+    _activityMutex.unlock();
 
-    if (now - _lastActivity > std::chrono::milliseconds(5000)) {
-        std::cout << "VerifyClosing: " << _id << std::endl;
+    if (now - lastActivity > std::chrono::milliseconds(5000)) {
         _running = false;
     }
 }

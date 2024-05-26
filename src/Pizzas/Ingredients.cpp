@@ -56,7 +56,10 @@ plz::Ingredients plz::Ingredients::operator-(const Ingredients &other) const
 {
     Ingredients newIngredients;
 
+    std::cout << "first dough: " << dough << std::endl;
+    std::cout << "other dough: " << other.dough << std::endl;
     newIngredients.dough = (other.dough < dough ? dough - other.dough : 0U);
+    std::cout << "new dough: " << newIngredients.dough << std::endl;
     newIngredients.tomato = (other.tomato < tomato ? tomato - other.tomato : 0U);
     newIngredients.gruyere = (other.gruyere < gruyere ? gruyere - other.gruyere : 0U);
     newIngredients.ham = (other.ham < ham ? ham - other.ham : 0U);
@@ -113,6 +116,11 @@ plz::Ingredients &plz::Ingredients::operator=(const Ingredients &other)
     goatCheese = other.goatCheese;
     chiefLove = other.chiefLove;
     return *this;
+}
+
+bool plz::Ingredients::operator<(const Ingredients &other) const
+{
+    return dough < other.dough || tomato < other.tomato || gruyere < other.gruyere || ham < other.ham || mushrooms < other.mushrooms || steak < other.steak || eggplant < other.eggplant || goatCheese < other.goatCheese || chiefLove < other.chiefLove;
 }
 
 std::ostream &operator<<(std::ostream &os, const plz::Ingredients &ingredients)

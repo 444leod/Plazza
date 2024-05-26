@@ -22,7 +22,7 @@ void plz::Runner::run()
     tv.tv_sec = 0;
     tv.tv_usec = 0;
 
-    std::cout << "Hola amigo, what pizza would you like to order ?" << std::endl;
+    std::cout << "Ciao amigo, what pizza would you like to order ?" << std::endl;
     while (this->_running) {
         FD_ZERO(&readfds);
         FD_SET(0, &readfds);
@@ -35,7 +35,7 @@ void plz::Runner::run()
                 break;
             }
             this->handleCommand(command.value());
-            std::cout << "Hola amigo, what pizza would you like to order ?" << std::endl;
+            std::cout << "Ciao amigo, what pizza would you like to order ?" << std::endl;
         }
         this->_reception->receivePackets();
         this->_reception->handlePackets();

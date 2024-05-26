@@ -12,7 +12,6 @@ SRC =	src/main.cpp \
 		src/Runner.cpp \
 		src/Kitchen.cpp \
 		src/Reception.cpp \
-		src/Pizzaiolo.cpp \
 		src/ThreadPool.cpp \
 		src/IPC/Packet.cpp \
 		src/IPC/NamedPipes.cpp \

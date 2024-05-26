@@ -23,10 +23,6 @@ int main(int argc, char *argv[], UNUSED char *env[])
         return 84;
     }
 
-    // std::cout << "Multiplier: " << setup.multiplier() << std::endl;
-    // std::cout << "Pizzaiolos: " << setup.pizzaiolos() << std::endl;
-    // std::cout << "Restock Time: " << setup.restock() << std::endl;
-
     plz::IPizzaFactory factory = plz::IPizzaFactory(setup.multiplier());
 
     std::shared_ptr<plz::Reception> reception = std::make_shared<plz::Reception>(setup, factory);

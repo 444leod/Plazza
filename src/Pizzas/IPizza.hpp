@@ -10,6 +10,7 @@
 #include "Packet.hpp"
 #include "Ingredients.hpp"
 #include <cstdint>
+#include <map>
 
 namespace plz {
     enum PizzaType : uint32_t {
@@ -19,12 +20,26 @@ namespace plz {
         Fantasia = 8
     };
 
+    inline std::map<PizzaType, std::string> pizzaTypeToString = {
+        {Regina, "Regina"},
+        {Margarita, "Margarita"},
+        {Americana, "Americana"},
+        {Fantasia, "Fantasia"}
+    };
+
     enum PizzaSize : uint32_t {
         S = 1,
         M = 2,
         L = 4,
         XL = 8,
         XXL = 16
+    };
+    inline std::map<PizzaSize, std::string> pizzaSizeToString = {
+        {S, "S"},
+        {M, "M"},
+        {L, "L"},
+        {XL, "XL"},
+        {XXL, "XXL"}
     };
 
     class IPizza {

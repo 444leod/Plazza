@@ -12,7 +12,6 @@ SRC =	src/main.cpp \
 		src/Runner.cpp \
 		src/Kitchen.cpp \
 		src/Reception.cpp \
-		src/Pizzaiolo.cpp \
 		src/ThreadPool.cpp \
 		src/IPC/Packet.cpp \
 		src/IPC/NamedPipes.cpp \
@@ -20,6 +19,7 @@ SRC =	src/main.cpp \
 		src/Pizzas/IPizzaFactory.cpp \
 		src/Pizzas/Ingredients.cpp \
 		src/lib/Fork.cpp \
+		src/lib/FileDescriptorMonitor.cpp \
 
 OBJ = $(SRC:.cpp=.o)
 

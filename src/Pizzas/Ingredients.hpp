@@ -25,6 +25,7 @@ namespace plz {
             plz::Ingredients& operator+=(const plz::Ingredients &other);
             plz::Ingredients& operator-=(const plz::Ingredients &other);
             bool operator>=(const plz::Ingredients &other) const;
+            bool operator<(const plz::Ingredients &other) const;
             plz::Ingredients& operator=(const plz::Ingredients &other);
 
             uint32_t dough = 0;

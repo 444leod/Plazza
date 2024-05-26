@@ -115,6 +115,11 @@ plz::Ingredients &plz::Ingredients::operator=(const Ingredients &other)
     return *this;
 }
 
+bool plz::Ingredients::operator<(const Ingredients &other) const
+{
+    return dough < other.dough || tomato < other.tomato || gruyere < other.gruyere || ham < other.ham || mushrooms < other.mushrooms || steak < other.steak || eggplant < other.eggplant || goatCheese < other.goatCheese || chiefLove < other.chiefLove;
+}
+
 std::ostream &operator<<(std::ostream &os, const plz::Ingredients &ingredients)
 {
     os << "Dough: " << ingredients.dough << std::endl;

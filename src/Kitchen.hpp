@@ -8,11 +8,11 @@
 #pragma once
 
 #include "IPizza.hpp"
-#include "Pizzaiolo.hpp"
 #include "Ingredients.hpp"
 #include "Fork.hpp"
 #include "IpcTool.hpp"
 #include "Packet.hpp"
+#include "ThreadPool.hpp"
 
 #include <cstdint>
 #include <string>
@@ -75,8 +75,10 @@ namespace plz {
             void _handlePackets();
             void _restockIngredients();
             void _pizzaioloPizzas();
+            void _sendDisplayStatus();
             void _sendStatus();
             void _verifyClosing();
+            void _spreadPizzas();
 
             uint32_t _pizzaiolosNumber = 0;
             uint32_t _restockTime = 0;
@@ -86,8 +88,11 @@ namespace plz {
             std::shared_ptr<plz::Ingredients> _ingredients = std::make_shared<plz::Ingredients>(5, 5, 5, 5, 5, 5, 5, 5 ,5);
             std::chrono::time_point<std::chrono::system_clock> _lastActivity;
             std::chrono::time_point<std::chrono::system_clock> _lastRestock;
-            std::vector<std::shared_ptr<plz::Pizzaiolo>> _pizzaiolos = {};
+            std::shared_ptr<ThreadPool> _threadPool;
+            std::mutex _printMutex;
+            std::mutex _activityMutex;
             bool _running = true;
+
     };
 }
 

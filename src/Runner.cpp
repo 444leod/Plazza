@@ -6,6 +6,7 @@
 */
 
 #include "Runner.hpp"
+#include "FileDescriptorMonitor.hpp"
 
 #include <iostream>
 
@@ -16,8 +17,14 @@ plz::Runner::Runner(std::shared_ptr<plz::Reception> reception) : _reception(rece
 void plz::Runner::run()
 {
     std::optional<std::string> command;
+    std::shared_ptr<lib::FileDescriptorMonitor> monitor = std::make_shared<lib::FileDescriptorMonitor>();
+    monitor->addReadFd(0);
+    monitor->setTimeout(std::chrono::seconds(0), std::chrono::milliseconds(0));
 
     while (this->_running) {
+        monitor->watch();
+        if (monitor->isReadable(0) == false)
+            continue;
         command = this->getCommand();
         if (!command.has_value()) {
             std::cout << "Exiting" << std::endl;

@@ -17,6 +17,7 @@ SRC =	src/main.cpp \
 		src/IPC/Packet.cpp \
 		src/IPC/NamedPipes.cpp \
 		src/IPC/IpcTool.cpp \
+		src/lib/FileDescriptorMonitor.cpp \
 		src/Pizzas/IPizzaFactory.cpp \
 
 OBJ = $(SRC:.cpp=.o)
@@ -24,7 +25,7 @@ OBJ = $(SRC:.cpp=.o)
 CC = g++
 
 CXXFLAGS	+=	-Wall -Wextra -Werror -Wpedantic -std=c++20
-CXXFLAGS 	+=	-I./include -I./src/Pizzas -I./src/IPC
+CXXFLAGS 	+=	-I./include -I./src/Pizzas -I./src/IPC -I./src/lib
 
 all:	$(NAME)
 
